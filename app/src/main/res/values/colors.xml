@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color> // original colors, ignore them
+    <color name="white">#FFFFFFFF</color>  <!--    original colors, ignore them-->
 
 
-    <color name="primary_green">#129575</color>
-    <color name="small_secondary_yellow">#FF9C00</color>
 
-    <color name="large_primary_black">#000000</color>
-    <color name="secondary_black">#121212</color>
-    <color name="background_and_bottom_nav_bar_white">#FFFFFF</color>
-    <color name="light_gray">#D9D9D9</color>
-    <color name="dark_gray">#484848</color>
+    <color name="primary_green">#129575</color> <!--     used mainly in buttons-->
+
+    <color name="small_secondary_yellow">#FF9C00</color> <!--    "Don't have an account? Sign Up" , found in Sign In and Sign Up screens-->
+
+
+    <color name="large_primary_black">#000000</color> <!--    used for the login screen that has Hello, Welcome Back! (Note, only Hello is the word with this color), Used for the Hello User Screen, basically any screen with a Big Black Title.-->
+
+
+    <color name="secondary_black">#121212</color> <!--    Used mainly for black text that is smaller and happens to be under the Large Primary Black Texts-->
+
+
+    <color name="background_and_bottom_nav_bar_white">#FFFFFF</color> <!--    used in every screen for the background and for the Bottom Navigation Bar-->
+
+
+    <color name="light_gray">#D9D9D9</color> <!--    used for things like "Enter Email" , "Enter Password" , and for the background of the food that is displayed in the home screen etc-->
+
+
+    <color name="dark_gray">#484848</color>  <!--    used for the text in the home screen for the food recipes titles themselves, Ex: Classic Greek Salad, Crunchy Nut Coleslaw, etc-->
+
 
 </resources>
