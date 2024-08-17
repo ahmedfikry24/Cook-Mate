@@ -1,9 +1,47 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
+    <!-- Base application theme -->
     <style name="Base.Theme.CookMate" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- This is the base theme for my app. -->
+        <item name="colorPrimary">@color/primary_green</item> <!-- Set your primary green color -->
+        <item name="colorPrimaryVariant">@color/primary_green</item> <!-- Consistent variant -->
+        <item name="colorOnPrimary">@color/background_and_bottom_nav_bar_white</item> <!-- Text color on primary -->
     </style>
 
+    <!-- Main app theme -->
     <style name="Theme.CookMate" parent="Base.Theme.CookMate" />
+
+    <!-- Custom button style definition -->
+    <style name="Widget.CookMate.CustomButton" parent="Widget.MaterialComponents.Button">
+        <!-- Set the ripple background drawable -->
+        <item name="android:background">@drawable/ripple_green_button</item>
+
+        <!-- Center the text inside the button -->
+        <item name="android:gravity">center</item>
+
+        <!-- Set the text color to white -->
+        <item name="android:textColor">@color/background_and_bottom_nav_bar_white</item>
+
+        <!-- Apply the Poppins Bold font -->
+        <item name="android:fontFamily">@font/poppins_semi_bold</item>
+
+        <!-- Add padding for better visual appearance -->
+        <item name="android:padding">12dp</item>
+
+        <!-- Set minimum dimensions -->
+        <item name="android:minWidth">64dp</item>
+        <item name="android:minHeight">48dp</item>
+
+        <!-- Allow the button size to be flexible -->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <!-- Remove unwanted shadows or borders -->
+        <item name="android:elevation">0dp</item>
+        <item name="android:outlineProvider">none</item>
+
+        <!-- Remove default tint to prevent overriding -->
+        <item name="android:backgroundTint">@null</item>
+        <item name="android:backgroundTintMode">src_over</item>
+    </style>
 </resources>
