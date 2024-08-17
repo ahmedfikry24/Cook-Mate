@@ -16,6 +16,6 @@ interface RecipeDao {
     @Query("SELECT * FROM FAVOURITERECIPEENTITY")
     suspend fun getAllFavouriteRecipes(): List<FavouriteRecipeEntity>
 
-    @Delete
-    suspend fun removeFavouriteRecipe(recipe: FavouriteRecipeEntity)
+    @Query("DELETE FROM FAVOURITERECIPEENTITY WHERE id = :recipeId")
+    suspend fun removeFavouriteRecipe(recipeId: Int)
 }
