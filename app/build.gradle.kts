@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.navSafeArgs)
+    alias(libs.plugins.kotlin.ksp)
 }
 
 android {
@@ -45,4 +47,25 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+
+    // navigation
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+
+    // retrofit
+    implementation(libs.retrofit)
+    implementation(libs.square.converter.gson)
+    implementation(libs.okhttp3)
+    implementation(libs.okhttp3.interceptor)
+
+    // room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
+    //thirdParty
+    implementation(libs.glide)
+
 }
