@@ -18,7 +18,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "BaseUrl", "\"www.themealdb.com/api/json/v1/1/\"")
+        buildConfigField("String", "BaseUrl", "\"https://www.themealdb.com/api/json/v1/1/\"")
     }
 
     buildTypes {
