@@ -15,4 +15,33 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/auth_nav_graph" />
 
+
+    <androidx.appcompat.widget.AppCompatButton
+        style="@style/Widget.CookMate.CustomButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.681" />
+
+    <!-- the above button has the style included, the one below it does not, that's the reason as to why only one is green. -->
+
+
+    <androidx.appcompat.widget.AppCompatButton
+
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.36" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
