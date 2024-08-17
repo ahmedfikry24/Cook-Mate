@@ -28,6 +28,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.681" />
 
+    <!-- the above button has the style included, the one below it does not, that's the reason as to why only one is green. -->
+
+
     <androidx.appcompat.widget.AppCompatButton
 
         android:id="@+id/button"
