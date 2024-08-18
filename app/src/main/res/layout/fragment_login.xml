@@ -52,16 +52,16 @@
         android:layout_width="364dp"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
-        android:inputType="textPersonName"
         android:background="@drawable/custom_input_field"
         android:fontFamily="@font/poppins_regular"
         android:hint="@string/enter_name"
+        android:inputType="textPersonName"
         android:padding="12dp"
         android:textColorHint="@color/light_gray"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/nameTextView"
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameTextView"
         app:layout_constraintWidth_percent="0.8" />
 
@@ -89,8 +89,8 @@
         android:textColorHint="@color/light_gray"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="@+id/nameInput"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/passwordTextView"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordTextView"
         app:layout_constraintWidth_percent="0.8" />
 
