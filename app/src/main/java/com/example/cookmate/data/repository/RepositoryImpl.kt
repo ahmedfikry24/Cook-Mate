@@ -1,6 +1,7 @@
 package com.example.cookmate.data.repository
 
 import com.example.cookmate.data.local.entity.FavouriteRecipeEntity
+import com.example.cookmate.data.local.entity.RegisterEntity
 import com.example.cookmate.data.model.CategoryDto
 import com.example.cookmate.data.model.MealDto
 import com.example.cookmate.data.source.LocalDataSource
@@ -10,6 +11,14 @@ class RepositoryImpl(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
 ) : Repository {
+
+    override suspend fun addUser(user: RegisterEntity) {
+        localDataSource.addUser(user)
+    }
+
+    override suspend fun getAllUsers(): List<RegisterEntity> {
+        return localDataSource.getAllUsers()
+    }
 
     override suspend fun addFavouriteRecipe(recipe: FavouriteRecipeEntity) {
         localDataSource.addFavouriteRecipe(recipe)
