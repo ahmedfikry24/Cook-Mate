@@ -29,14 +29,14 @@ class LoginFragment : Fragment() {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_login, container, false)
 
-        // Check if the user is already logged in
         val sharedPreferences = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         if (sharedPreferences.getBoolean("isLoggedIn", false)) {
-            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+            val navController = findNavController()
+            navController.setGraph(R.navigation.user_nav_graph) // Switch to the graph containing HomeFragment
+            navController.navigate(R.id.homeFragment) // Navigate to the HomeFragment
             return rootView
         }
 
-        // Initialize the views
         nameInput = rootView.findViewById(R.id.nameInput)
         passwordInput = rootView.findViewById(R.id.passwordInput)
         signInButton = rootView.findViewById(R.id.signInButton)
@@ -48,18 +48,18 @@ class LoginFragment : Fragment() {
             if (name.isEmpty() || password.isEmpty()) {
                 Toast.makeText(requireContext(), "Please enter both name and password.", Toast.LENGTH_SHORT).show()
             } else {
-                // Validate credentials with the database
                 CoroutineScope(Dispatchers.IO).launch {
                     val authDao = RoomManager.getInit(requireContext()).authDao
                     val userExists = authDao.getAllUsers().any { it.name == name && it.password == password }
 
                     withContext(Dispatchers.Main) {
                         if (userExists) {
-                            // Save the login state
                             sharedPreferences.edit().putBoolean("isLoggedIn", true).apply()
 
-                            // Navigate to the HomeFragment
-                            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                            // Switch to the user_nav_graph and navigate to HomeFragment
+                            val navController = findNavController()
+                            navController.setGraph(R.navigation.user_nav_graph)
+                            navController.navigate(R.id.homeFragment)
                         } else {
                             Toast.makeText(requireContext(), "Wrong name or password, please try again.", Toast.LENGTH_SHORT).show()
                         }
