@@ -2,7 +2,6 @@ package com.example.cookmate.data.local.shared_pref
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.core.content.edit
 
 object SharedPrefManager {
 

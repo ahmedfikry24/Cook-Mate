@@ -7,18 +7,18 @@ import com.example.cookmate.data.remote.RetrofitServices
 class RemoteDataSourceImpl(private val retrofitServices: RetrofitServices) : RemoteDataSource {
 
     override suspend fun recipeSearch(name: String): List<MealDto.Recipe> {
-        return retrofitServices.recipeSearch(name)
+        return retrofitServices.recipeSearch(name).body()?.meals.orEmpty().requireNoNulls()
     }
 
     override suspend fun getMealById(id: Int): List<MealDto.Recipe> {
-        return retrofitServices.getMealById(id)
+        return retrofitServices.getMealById(id).body()?.meals.orEmpty().requireNoNulls()
     }
 
     override suspend fun getAllCategories(): List<CategoryDto.CategoriesItem> {
-        return retrofitServices.getAllCategories()
+        return retrofitServices.getAllCategories().body()?.categories.orEmpty().requireNoNulls()
     }
 
     override suspend fun getRandomMeal(): List<MealDto.Recipe> {
-        return retrofitServices.getRandomMeal()
+        return retrofitServices.getRandomMeal().body()?.meals.orEmpty().requireNoNulls()
     }
 }
