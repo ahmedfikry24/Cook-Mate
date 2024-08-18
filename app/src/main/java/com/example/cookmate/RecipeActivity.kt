@@ -1,14 +1,23 @@
 package com.example.cookmate
 
+import android.os.Build
 import android.os.Bundle
+import android.view.MenuItem
+import android.view.WindowInsetsController
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 
 class RecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var navHost: NavHostFragment
@@ -27,12 +36,22 @@ class RecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        setupThemeAppearance()
         initViews()
         setupBottomNav()
         setupNavDrawer()
     }
 
-
+    private fun setupThemeAppearance() {
+        window.navigationBarColor = getColor(R.color.background)
+        window.statusBarColor = getColor(R.color.primary)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.setSystemBarsAppearance(
+                0,
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+            )
+        }
+    }
 
     private fun initViews() {
         navHost =
@@ -55,8 +74,6 @@ class RecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
 
     private fun setupBottomNav() {
-        navHost = supportFragmentManager.findFragmentById(R.id.user_main_container) as NavHostFragment
-        navController = navHost.navController
         findViewById<BottomNavigationView>(R.id.bottom_nav).setupWithNavController(navController)
     }
 
