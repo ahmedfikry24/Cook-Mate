@@ -1,7 +1,0 @@
-<!-- res/drawable/ripple_green_button.xml -->
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/ripple_green"> <!-- Custom ripple color -->
-
-    <item android:drawable="@drawable/green_button_background" /> <!-- Background with green color -->
-
-</ripple>
