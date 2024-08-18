@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.cookmate.R
 import com.example.cookmate.data.local.RoomManager
+import com.example.cookmate.data.local.entity.RegisterEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,6 +41,12 @@ class LoginFragment : Fragment() {
         nameInput = rootView.findViewById(R.id.nameInput)
         passwordInput = rootView.findViewById(R.id.passwordInput)
         signInButton = rootView.findViewById(R.id.signInButton)
+
+        // for testing purposes, since nothing exists in the database yet
+        CoroutineScope(Dispatchers.IO).launch {
+            val authDao = RoomManager.getInit(requireContext()).authDao
+            authDao.addUser(RegisterEntity(name = "testuser", password = "testpassword" , email = "test"))
+        }
 
         signInButton.setOnClickListener {
             val name = nameInput.text.toString().trim()
