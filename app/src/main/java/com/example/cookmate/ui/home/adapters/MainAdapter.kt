@@ -11,9 +11,9 @@ import com.example.cookmate.R
 import com.example.cookmate.ui.home.view_model.CategoryInfo
 import com.google.android.material.tabs.TabLayout
 
-class HomeAdapter(
+class MainAdapter(
     private var categories: List<CategoryInfo>,
-) : RecyclerView.Adapter<HomeAdapter.MainViewHolder>() {
+) : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         return when (viewType) {
@@ -45,7 +45,7 @@ class HomeAdapter(
         holder.apply {
             categories.forEachIndexed { index, category ->
                 if (index == 0) {
-                    categories[index].onClick(category.id)
+                    categories[index].onClick(category.name)
                 }
                 val tab = tabLayout.newTab()
                 val customView =
@@ -74,7 +74,7 @@ class HomeAdapter(
                         val text = it.findViewById<TextView>(R.id.tab_text)
                         text.setTextColor(text.context.getColor(R.color.background))
                     }
-                    categories[tab?.position ?: 0].onClick(categories[tab?.position ?: 0].id)
+                    categories[tab?.position ?: 0].onClick(categories[tab?.position ?: 0].name)
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {

@@ -15,13 +15,13 @@ import com.example.cookmate.data.remote.RetrofitManager
 import com.example.cookmate.data.repository.RepositoryImpl
 import com.example.cookmate.data.source.LocalDataSourceImpl
 import com.example.cookmate.data.source.RemoteDataSourceImpl
-import com.example.cookmate.ui.home.adapters.HomeAdapter
+import com.example.cookmate.ui.home.adapters.MainAdapter
 import com.example.cookmate.ui.home.view_model.HomeViewModel
 import com.example.cookmate.ui.home.view_model.HomeViewModelFactory
 
 class HomeFragment : Fragment() {
     private lateinit var mainRecycler: RecyclerView
-    private lateinit var mainAdapter: HomeAdapter
+    private lateinit var mainAdapter: MainAdapter
     private lateinit var progressBar: ProgressBar
 
     private val remoteDataSource by lazy { RemoteDataSourceImpl(RetrofitManager.service) }
@@ -49,7 +49,7 @@ class HomeFragment : Fragment() {
 
     private fun initViews(view: View) {
         mainRecycler = view.findViewById(R.id.main_recycler)
-        mainAdapter = HomeAdapter(listOf())
+        mainAdapter = MainAdapter(listOf())
         mainRecycler.adapter = mainAdapter
         progressBar = view.findViewById(R.id.home_progress_bar)
     }
