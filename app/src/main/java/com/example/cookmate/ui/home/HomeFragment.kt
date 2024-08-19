@@ -15,6 +15,11 @@ class HomeFragment : Fragment() {
     private lateinit var mainAdapter: HomeAdapter
     private lateinit var progressBar: ProgressBar
 
+    private val remoteDataSource by lazy { RemoteDataSourceImpl(RetrofitManager.service) }
+    private val localDataSource by lazy { LocalDataSourceImpl(RoomManager.getInit(requireContext())) }
+    private val repository by lazy { RepositoryImpl(remoteDataSource, localDataSource) }
+    private val viewModel by viewModels<HomeViewModel> { HomeViewModelFactory(repository) }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
