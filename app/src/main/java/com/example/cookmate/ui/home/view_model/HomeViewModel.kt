@@ -21,4 +21,14 @@ class HomeViewModel(
     val categories = MutableLiveData<List<CategoryInfo>>(listOf())
     val events = MutableLiveData<HomeEvents>(HomeEvents.Idle)
 
+    fun getCategories() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.getAllCategories()
+            categories.postValue(result.map {
+                it.toUiSate { viewModelScope.launch { events.postValue(HomeEvents.OnClickCategory(it)) } }
+            })
+        }
+    }
+
+
 }

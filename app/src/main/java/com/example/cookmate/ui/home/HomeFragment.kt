@@ -5,10 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookmate.R
+import com.example.cookmate.data.local.RoomManager
+import com.example.cookmate.data.remote.RetrofitManager
+import com.example.cookmate.data.repository.RepositoryImpl
+import com.example.cookmate.data.source.LocalDataSourceImpl
+import com.example.cookmate.data.source.RemoteDataSourceImpl
 import com.example.cookmate.ui.home.adapters.HomeAdapter
+import com.example.cookmate.ui.home.view_model.HomeViewModel
+import com.example.cookmate.ui.home.view_model.HomeViewModelFactory
 
 class HomeFragment : Fragment() {
     private lateinit var mainRecycler: RecyclerView
@@ -20,6 +29,11 @@ class HomeFragment : Fragment() {
     private val repository by lazy { RepositoryImpl(remoteDataSource, localDataSource) }
     private val viewModel by viewModels<HomeViewModel> { HomeViewModelFactory(repository) }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.getCategories()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -30,6 +44,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
+        viewModelObservers()
     }
 
     private fun initViews(view: View) {
@@ -37,5 +52,13 @@ class HomeFragment : Fragment() {
         mainAdapter = HomeAdapter(listOf())
         mainRecycler.adapter = mainAdapter
         progressBar = view.findViewById(R.id.home_progress_bar)
+    }
+
+    private fun viewModelObservers() {
+        viewModel.categories.observe(viewLifecycleOwner) { categories ->
+            progressBar.isVisible = categories.isEmpty()
+            mainRecycler.isVisible = categories.isNotEmpty()
+            mainAdapter.updateCategories(categories)
+        }
     }
 }
