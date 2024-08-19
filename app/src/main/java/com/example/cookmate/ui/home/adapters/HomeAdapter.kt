@@ -36,22 +36,23 @@ class HomeAdapter(
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         when (holder) {
-            is CategoriesTabsViewHolder -> onBindCategoriesTabs(holder, position)
+            is CategoriesTabsViewHolder -> onBindCategoriesTabs(holder)
         }
     }
 
     @SuppressLint("InflateParams")
-    private fun onBindCategoriesTabs(holder: CategoriesTabsViewHolder, position: Int) {
-        val item = categories[position]
+    private fun onBindCategoriesTabs(holder: CategoriesTabsViewHolder) {
         holder.apply {
-            categories.forEach { category ->
+            categories.forEachIndexed { index, category ->
+                if (index == 0) {
+                    categories[index].onClick(category.id)
+                }
                 val tab = tabLayout.newTab()
                 val customView =
                     LayoutInflater.from(holder.itemView.context)
                         .inflate(R.layout.custom_tab_view, null)
                 val tabText = customView.findViewById<TextView>(R.id.tab_text)
                 tabText.text = category.name
-                tab.id = category.id.toInt()
                 tab.customView = customView
                 tab.customView?.let {
                     it.setBackgroundResource(R.drawable.unselected_tab_shape)
@@ -73,7 +74,7 @@ class HomeAdapter(
                         val text = it.findViewById<TextView>(R.id.tab_text)
                         text.setTextColor(text.context.getColor(R.color.background))
                     }
-                    item.onClick(tab?.id.toString())
+                    categories[tab?.position ?: 0].onClick(categories[tab?.position ?: 0].id)
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {

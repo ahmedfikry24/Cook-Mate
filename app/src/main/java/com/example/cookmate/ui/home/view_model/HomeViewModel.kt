@@ -24,9 +24,19 @@ class HomeViewModel(
     fun getCategories() {
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getAllCategories()
-            categories.postValue(result.map {
-                it.toUiSate { viewModelScope.launch { events.postValue(HomeEvents.OnClickCategory(it)) } }
-            })
+            categories.postValue(
+                result.map {
+                    it.toUiSate {
+                        viewModelScope.launch {
+                            events.postValue(
+                                HomeEvents.OnClickCategory(
+                                    it
+                                )
+                            )
+                        }
+                    }
+                }
+            )
         }
     }
 
