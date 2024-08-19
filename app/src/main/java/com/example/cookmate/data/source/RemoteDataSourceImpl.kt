@@ -10,8 +10,13 @@ class RemoteDataSourceImpl(private val retrofitServices: RetrofitServices) : Rem
         return retrofitServices.recipeSearch(name).body()?.meals.orEmpty().requireNoNulls()
     }
 
-    override suspend fun getMealById(id: Int): List<MealDto.Recipe> {
+    override suspend fun getMealById(id: String): List<MealDto.Recipe> {
         return retrofitServices.getMealById(id).body()?.meals.orEmpty().requireNoNulls()
+    }
+
+    override suspend fun getMealsByCategoryName(name: String): List<MealDto.Recipe> {
+        return retrofitServices.getMealsByCategoryName(name).body()?.meals.orEmpty()
+            .requireNoNulls()
     }
 
     override suspend fun getAllCategories(): List<CategoryDto.CategoriesItem> {

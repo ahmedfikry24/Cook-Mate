@@ -12,7 +12,10 @@ interface RetrofitServices {
     suspend fun recipeSearch(@Query("s") name: String): Response<MealDto>
 
     @GET("lookup.php")
-    suspend fun getMealById(@Query("i") id: Int): Response<MealDto>
+    suspend fun getMealById(@Query("i") id: String): Response<MealDto>
+
+    @GET("filter.php")
+    suspend fun getMealsByCategoryName(@Query("c") name: String): Response<MealDto>
 
     @GET("categories.php")
     suspend fun getAllCategories(): Response<CategoryDto>
