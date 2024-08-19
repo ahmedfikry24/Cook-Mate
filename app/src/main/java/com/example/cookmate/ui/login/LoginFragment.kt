@@ -7,6 +7,7 @@ import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.text.TextPaint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.cookmate.R
 import com.example.cookmate.data.local.RoomManager
 import com.example.cookmate.data.local.entity.RegisterEntity
+import com.example.cookmate.data.local.shared_pref.SharedPrefManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,8 +40,11 @@ class LoginFragment : Fragment() {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_login, container, false)
 
-        val sharedPreferences = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        if (sharedPreferences.getBoolean("isLoggedIn", false)) {
+        // Initialize the shared preferences
+        SharedPrefManager.init(requireContext())
+
+        // Check if the user is already logged in
+        if (SharedPrefManager.isLogin) {
             val navController = findNavController()
             navController.setGraph(R.navigation.user_nav_graph)
             navController.navigate(R.id.homeFragment)
@@ -71,6 +76,12 @@ class LoginFragment : Fragment() {
             override fun onClick(widget: View) {
                 findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
             }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.color = yellowColor // Ensures the text stays yellow
+                ds.isUnderlineText = true
+            }
         }
         spannableString.setSpan(clickableSpan, 23, signUpText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
@@ -92,7 +103,8 @@ class LoginFragment : Fragment() {
 
                     withContext(Dispatchers.Main) {
                         if (userExists) {
-                            sharedPreferences.edit().putBoolean("isLoggedIn", true).apply()
+                            // Update the login status using SharedPrefManager
+                            SharedPrefManager.isLogin = true
 
                             // Switch to the user_nav_graph and navigate to HomeFragment
                             val navController = findNavController()
