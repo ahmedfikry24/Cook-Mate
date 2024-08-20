@@ -8,17 +8,22 @@ data class FavoriteRecipeInfo(
     val category: String = "",
     val area: String = "",
     val url: String = "",
-    val onClick: (String) -> Unit = {},
+    val onClickItem: (String) -> Unit = {},
+    val onClickFavorite: (String) -> Unit = {},
 )
 
 
-fun FavouriteRecipeEntity.toUiState(onClick: (String) -> Unit): FavoriteRecipeInfo {
+fun FavouriteRecipeEntity.toUiState(
+    onClickItem: (String) -> Unit,
+    onClickFavorite: (String) -> Unit,
+): FavoriteRecipeInfo {
     return FavoriteRecipeInfo(
         id = this.id,
         name = this.name,
         category = this.type,
         area = this.area,
         url = this.imageUrl,
-        onClick = onClick
+        onClickItem = onClickItem,
+        onClickFavorite = onClickFavorite
     )
 }
