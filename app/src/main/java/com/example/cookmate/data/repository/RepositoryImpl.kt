@@ -28,7 +28,7 @@ class RepositoryImpl(
         return localDataSource.getAllFavouriteRecipes()
     }
 
-    override suspend fun removeFavouriteRecipe(recipeId: Int) {
+    override suspend fun removeFavouriteRecipe(recipeId: String) {
         localDataSource.removeFavouriteRecipe(recipeId)
     }
 
