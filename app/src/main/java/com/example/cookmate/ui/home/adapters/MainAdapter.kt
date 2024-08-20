@@ -5,15 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.bumptech.glide.Glide
 import com.example.cookmate.R
 import com.example.cookmate.ui.home.view_model.CategoryInfo
+import com.example.cookmate.ui.home.view_model.RecipeInfo
 import com.google.android.material.tabs.TabLayout
 
 class MainAdapter(
     private var categories: List<CategoryInfo>,
+    private var recipesOfDay: List<RecipeInfo>,
 ) : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
 
     val recipesAdapter = RecipesAdapter(listOf())
@@ -25,7 +29,7 @@ class MainAdapter(
                     .inflate(R.layout.home_categories_tabs, parent, false)
             )
 
-            SECOND_VIEW -> CategoryRecipesViewHolder(
+            SECOND_VIEW -> RecipesViewHolder(
                 LayoutInflater.from(parent.context)
                     .inflate(R.layout.home_recipes, parent, false)
             )
@@ -40,7 +44,8 @@ class MainAdapter(
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         when (holder) {
             is CategoriesTabsViewHolder -> onBindCategoriesTabs(holder)
-            is CategoryRecipesViewHolder -> onBindRecipes(holder)
+            is RecipesViewHolder -> onBindRecipes(holder)
+            is RecipeOfDayViewHolder -> onBindRecipeOfDay(holder)
         }
     }
 
@@ -95,15 +100,49 @@ class MainAdapter(
         }
     }
 
-    private fun onBindRecipes(holder: CategoryRecipesViewHolder) {
+    fun updateCategories(newItems: List<CategoryInfo>) {
+        val diffUtil = DiffUtil.calculateDiff(
+            MainAdapterDiffUtil(
+                categories,
+                newItems,
+                areItemsTheSame = { oldItem, newItem -> oldItem.id == newItem.id },
+                areContentsTheSame = { oldItem, newItem -> oldItem == newItem }
+            ))
+        categories = newItems
+        diffUtil.dispatchUpdatesTo(this)
+    }
+
+    private fun onBindRecipes(holder: RecipesViewHolder) {
         holder.apply {
             recycler.adapter = recipesAdapter
         }
     }
 
-    fun updateCategories(newItems: List<CategoryInfo>) {
-        val diffUtil = DiffUtil.calculateDiff(MainAdapterDiffUtil(categories, newItems))
-        categories = newItems
+    private fun onBindRecipeOfDay(holder: RecipeOfDayViewHolder) {
+        if (recipesOfDay.isNotEmpty())
+            holder.apply {
+                val item = recipesOfDay.first()
+                image.loadUrl(item.url)
+                title.text = item.name
+                area.text = item.area
+                category.text = item.category
+                itemView.setOnClickListener { item.onClick(item.id) }
+            }
+    }
+
+    private fun AppCompatImageView.loadUrl(url: String) {
+        Glide.with(this).load(url).into(this)
+    }
+
+    fun updateRecipesOfDay(newItems: List<RecipeInfo>) {
+        val diffUtil = DiffUtil.calculateDiff(
+            MainAdapterDiffUtil(
+                recipesOfDay,
+                newItems,
+                areItemsTheSame = { oldItem, newItem -> oldItem.id == newItem.id },
+                areContentsTheSame = { oldItem, newItem -> oldItem == newItem }
+            ))
+        recipesOfDay = newItems
         diffUtil.dispatchUpdatesTo(this)
     }
 
@@ -115,11 +154,16 @@ class MainAdapter(
         val tabLayout: TabLayout = view.findViewById(R.id.tab_layout)
     }
 
-    class CategoryRecipesViewHolder(view: View) : MainViewHolder(view) {
+    class RecipesViewHolder(view: View) : MainViewHolder(view) {
         val recycler: RecyclerView = view.findViewById(R.id.category_recipes_recycler)
     }
 
-    class RecipeOfDayViewHolder(view: View) : MainViewHolder(view)
+    class RecipeOfDayViewHolder(view: View) : MainViewHolder(view) {
+        val image: AppCompatImageView = view.findViewById(R.id.image_recipe)
+        val title: TextView = view.findViewById(R.id.title_recipe)
+        val area: TextView = view.findViewById(R.id.area_recipe)
+        val category: TextView = view.findViewById(R.id.category_recipe)
+    }
 
     companion object {
         private const val FIRST_VIEW = 0
