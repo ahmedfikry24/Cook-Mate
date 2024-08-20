@@ -37,6 +37,7 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getCategories()
+        viewModel.getRecipeOfDay()
     }
 
     override fun onCreateView(
@@ -54,7 +55,7 @@ class HomeFragment : Fragment() {
 
     private fun initViews(view: View) {
         mainRecycler = view.findViewById(R.id.main_recycler)
-        mainAdapter = MainAdapter(listOf())
+        mainAdapter = MainAdapter(listOf(), listOf())
         mainRecycler.adapter = mainAdapter
         progressBar = view.findViewById(R.id.home_progress_bar)
         navController = findNavController()
@@ -66,10 +67,12 @@ class HomeFragment : Fragment() {
             mainRecycler.isVisible = categories.isNotEmpty()
             mainAdapter.updateCategories(categories)
         }
-        viewModel.meals.observe(viewLifecycleOwner) { recipes ->
+        viewModel.categoriesRecipes.observe(viewLifecycleOwner) { recipes ->
             mainAdapter.recipesAdapter.updateRecipes(recipes)
         }
-
+        viewModel.recipesOfDay.observe(viewLifecycleOwner) { recipes ->
+            mainAdapter.updateRecipesOfDay(recipes)
+        }
         viewModel.events.observe(viewLifecycleOwner) { event ->
             when (event) {
                 HomeEvents.Idle -> Unit
