@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookmate.R
 import com.example.cookmate.data.local.RoomManager
@@ -26,6 +28,8 @@ class FavouriteFragment : Fragment() {
     private val localDataSource by lazy { LocalDataSourceImpl(RoomManager.getInit(requireContext())) }
     private val repository by lazy { RepositoryImpl(remoteDataSource, localDataSource) }
     private val viewModel by viewModels<FavoriteViewModel> { FavoriteViewModelFactory(repository) }
+
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +53,7 @@ class FavouriteFragment : Fragment() {
         recycler = view.findViewById(R.id.favorite_recycler)
         favoriteAdapter = FavoriteAdapter(listOf())
         recycler.adapter = favoriteAdapter
+        navController = findNavController()
     }
 
     private fun viewModelObserver() {
@@ -59,7 +64,13 @@ class FavouriteFragment : Fragment() {
             when (event) {
                 FavoriteEvents.Idle -> Unit
                 is FavoriteEvents.OnClickFavorite -> viewModel.removeFavoriteRecipe(event.id)
-                is FavoriteEvents.OnClickItem -> {}
+                is FavoriteEvents.OnClickItem -> {
+                    val direction =
+                        FavouriteFragmentDirections.actionFavouriteFragmentToRecipeDetailsFragment(
+                            event.id
+                        )
+                    navController.navigate(direction)
+                }
             }
             viewModel.events.postValue(FavoriteEvents.Idle)
         }
