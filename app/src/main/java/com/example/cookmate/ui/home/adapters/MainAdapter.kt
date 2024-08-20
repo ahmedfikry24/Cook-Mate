@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.cookmate.R
@@ -15,6 +16,8 @@ class MainAdapter(
     private var categories: List<CategoryInfo>,
 ) : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
 
+    val recipesAdapter = RecipesAdapter(listOf())
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         return when (viewType) {
             FIRST_VIEW -> CategoriesTabsViewHolder(
@@ -24,7 +27,7 @@ class MainAdapter(
 
             SECOND_VIEW -> CategoryRecipesViewHolder(
                 LayoutInflater.from(parent.context)
-                    .inflate(R.layout.home_category_recipes, parent, false)
+                    .inflate(R.layout.home_recipes, parent, false)
             )
 
             else -> RecipeOfDayViewHolder(
@@ -37,15 +40,17 @@ class MainAdapter(
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         when (holder) {
             is CategoriesTabsViewHolder -> onBindCategoriesTabs(holder)
+            is CategoryRecipesViewHolder -> onBindRecipes(holder)
         }
     }
 
     @SuppressLint("InflateParams")
     private fun onBindCategoriesTabs(holder: CategoriesTabsViewHolder) {
         holder.apply {
+            tabLayout.removeAllTabs()
             categories.forEachIndexed { index, category ->
                 if (index == 0) {
-                    categories[index].onClick(category.name)
+                    categories[index].onClick(categories[index].name)
                 }
                 val tab = tabLayout.newTab()
                 val customView =
@@ -90,10 +95,16 @@ class MainAdapter(
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateCategories(categories: List<CategoryInfo>) {
-        this.categories = categories
-        notifyDataSetChanged()
+    private fun onBindRecipes(holder: CategoryRecipesViewHolder) {
+        holder.apply {
+            recycler.adapter = recipesAdapter
+        }
+    }
+
+    fun updateCategories(newItems: List<CategoryInfo>) {
+        val diffUtil = DiffUtil.calculateDiff(MainAdapterDiffUtil(categories, newItems))
+        categories = newItems
+        diffUtil.dispatchUpdatesTo(this)
     }
 
     override fun getItemCount() = 3
@@ -104,7 +115,10 @@ class MainAdapter(
         val tabLayout: TabLayout = view.findViewById(R.id.tab_layout)
     }
 
-    class CategoryRecipesViewHolder(view: View) : MainViewHolder(view)
+    class CategoryRecipesViewHolder(view: View) : MainViewHolder(view) {
+        val recycler: RecyclerView = view.findViewById(R.id.category_recipes_recycler)
+    }
+
     class RecipeOfDayViewHolder(view: View) : MainViewHolder(view)
 
     companion object {
