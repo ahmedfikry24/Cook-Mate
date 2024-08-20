@@ -8,6 +8,8 @@ import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookmate.R
 import com.example.cookmate.data.local.RoomManager
@@ -16,6 +18,7 @@ import com.example.cookmate.data.repository.RepositoryImpl
 import com.example.cookmate.data.source.LocalDataSourceImpl
 import com.example.cookmate.data.source.RemoteDataSourceImpl
 import com.example.cookmate.ui.home.adapters.MainAdapter
+import com.example.cookmate.ui.home.view_model.HomeEvents
 import com.example.cookmate.ui.home.view_model.HomeViewModel
 import com.example.cookmate.ui.home.view_model.HomeViewModelFactory
 
@@ -28,6 +31,8 @@ class HomeFragment : Fragment() {
     private val localDataSource by lazy { LocalDataSourceImpl(RoomManager.getInit(requireContext())) }
     private val repository by lazy { RepositoryImpl(remoteDataSource, localDataSource) }
     private val viewModel by viewModels<HomeViewModel> { HomeViewModelFactory(repository) }
+
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +57,7 @@ class HomeFragment : Fragment() {
         mainAdapter = MainAdapter(listOf())
         mainRecycler.adapter = mainAdapter
         progressBar = view.findViewById(R.id.home_progress_bar)
+        navController = findNavController()
     }
 
     private fun viewModelObservers() {
@@ -59,6 +65,22 @@ class HomeFragment : Fragment() {
             progressBar.isVisible = categories.isEmpty()
             mainRecycler.isVisible = categories.isNotEmpty()
             mainAdapter.updateCategories(categories)
+        }
+        viewModel.meals.observe(viewLifecycleOwner) { recipes ->
+            mainAdapter.recipesAdapter.updateRecipes(recipes)
+        }
+
+        viewModel.events.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                HomeEvents.Idle -> Unit
+                is HomeEvents.OnClickCategory -> viewModel.getMealsByCategory(event.name)
+                is HomeEvents.OnClickMeal -> {
+                    val direction =
+                        HomeFragmentDirections.actionHomeFragmentToRecipeDetailsFragment(event.id)
+                    navController.navigate(direction)
+                }
+            }
+            viewModel.events.postValue(HomeEvents.Idle)
         }
     }
 }

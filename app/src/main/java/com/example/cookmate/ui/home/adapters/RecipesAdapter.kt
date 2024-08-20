@@ -30,6 +30,7 @@ class RecipesAdapter(
         holder.apply {
             image.loadUrl(item.url)
             text.text = item.name
+            holder.itemView.setOnClickListener { item.onClick(item.id) }
         }
     }
 
