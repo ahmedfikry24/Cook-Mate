@@ -46,9 +46,9 @@ class FavoriteViewModel(
 
     fun removeFavoriteRecipe(id: String) {
         viewModelScope.launch(Dispatchers.Default) {
-            repository.removeFavouriteRecipe(id.toInt())
+            repository.removeFavouriteRecipe(id)
             favoriteRecipes.postValue(
-                favoriteRecipes.value?.toMutableList()?.filter { it.id == id }
+                favoriteRecipes.value?.toMutableList()?.filterNot { it.id == id }
             )
         }
     }

@@ -12,10 +12,10 @@ class FavoriteDiffUtil(
     override fun getNewListSize() = newItems.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldItems[oldItemPosition].id == newItems[oldItemPosition].id
+        return oldItems[oldItemPosition].id == newItems[newItemPosition].id
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldItems[oldItemPosition] == newItems[oldItemPosition]
+        return oldItems[oldItemPosition] == newItems[newItemPosition]
     }
 }
