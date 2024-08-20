@@ -38,7 +38,7 @@
         android:label="fragment_recipe_details"
         tools:layout="@layout/fragment_recipe_details">
 
-        <!-- Argument for recipeId -->
+        <!-- Argument for recipeId, required for safe Args -->
         <argument
             android:name="recipeId"
             app:argType="string" />
