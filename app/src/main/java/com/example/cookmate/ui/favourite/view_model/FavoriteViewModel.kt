@@ -19,14 +19,36 @@ class FavoriteViewModel(
 ) : ViewModel() {
 
     val favoriteRecipes = MutableLiveData<List<FavoriteRecipeInfo>>(listOf())
+    val events = MutableLiveData<FavoriteEvents>(FavoriteEvents.Idle)
 
     fun getFavoriteRecipes() {
         viewModelScope.launch(Dispatchers.Default) {
             val result = repository.getAllFavouriteRecipes()
             favoriteRecipes.postValue(
                 result.map {
-                    it.toUiState { viewModelScope.launch { } }
+                    it.toUiState(
+                        onClickItem = {
+                            viewModelScope.launch {
+                                events.postValue(FavoriteEvents.OnClickItem(it))
+                            }
+                        },
+                        onClickFavorite = {
+                            viewModelScope.launch {
+                                events.postValue(FavoriteEvents.OnClickFavorite(it))
+                            }
+                        }
+                    )
                 }
+            )
+        }
+    }
+
+
+    fun removeFavoriteRecipe(id: String) {
+        viewModelScope.launch(Dispatchers.Default) {
+            repository.removeFavouriteRecipe(id.toInt())
+            favoriteRecipes.postValue(
+                favoriteRecipes.value?.toMutableList()?.filter { it.id == id }
             )
         }
     }
