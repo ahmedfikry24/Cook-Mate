@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,14 +14,20 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cookmate.R
+import com.example.cookmate.data.local.entity.FavouriteRecipeEntity
+import com.example.cookmate.data.local.entity.RegisterEntity
 import com.example.cookmate.data.model.MealDto
-import com.example.cookmate.data.remote.RetrofitManager
+import com.example.cookmate.data.repository.RepositoryImpl
+import com.example.cookmate.data.source.LocalDataSource
+import com.example.cookmate.data.source.RemoteDataSourceImpl
 import kotlinx.coroutines.launch
+import com.example.cookmate.data.remote.RetrofitManager
 
 class SearchFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchView: androidx.appcompat.widget.SearchView
+    private lateinit var repository: RepositoryImpl
 
     private var recipeList = listOf<MealDto.Recipe>()
 
@@ -36,6 +40,21 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Create a dummy LocalDataSource
+        val dummyLocalDataSource = object : LocalDataSource {
+            override suspend fun addUser(user: RegisterEntity) { /* No-op */ }
+            override suspend fun getAllUsers(): List<RegisterEntity> = emptyList()
+            override suspend fun addFavouriteRecipe(recipe: FavouriteRecipeEntity) { /* No-op */ }
+            override suspend fun getAllFavouriteRecipes(): List<FavouriteRecipeEntity> = emptyList()
+            override suspend fun removeFavouriteRecipe(recipeId: Int) { /* No-op */ }
+        }
+
+        // Initialize the repository with the dummy LocalDataSource and RemoteDataSourceImpl
+        repository = RepositoryImpl(
+            localDataSource = dummyLocalDataSource,
+            remoteDataSource = RemoteDataSourceImpl(RetrofitManager.service)
+        )
 
         recyclerView = view.findViewById(R.id.recipesRecyclerView)
         searchView = view.findViewById(R.id.searchView)
@@ -57,19 +76,14 @@ class SearchFragment : Fragment() {
         })
     }
 
-
     private fun searchRecipes(query: String) {
         lifecycleScope.launch {
             try {
-                val response = RetrofitManager.service.recipeSearch(query)
-                if (response.isSuccessful) {
-                    recipeList = response.body()?.meals?.filterNotNull().orEmpty()
-                    (recyclerView.adapter as RecipeAdapter).updateData(recipeList)
-                    if (recipeList.isEmpty()) {
-                        Toast.makeText(requireContext(), "No recipes found", Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    Toast.makeText(requireContext(), "Error fetching data", Toast.LENGTH_SHORT).show()
+                val recipes = repository.recipeSearch(query)
+                recipeList = recipes
+                (recyclerView.adapter as RecipeAdapter).updateData(recipeList)
+                if (recipeList.isEmpty()) {
+                    Toast.makeText(requireContext(), "No recipes found", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 Toast.makeText(requireContext(), "Error fetching data", Toast.LENGTH_SHORT).show()
@@ -87,48 +101,9 @@ class SearchFragment : Fragment() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
-            // Create the item layout programmatically
-            val itemLayout = ConstraintLayout(parent.context).apply {
-                layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-                setPadding(8, 8, 8, 8)
-
-                // ImageView for recipe image
-                val imageView = ImageView(context).apply {
-                    id = View.generateViewId()
-                    layoutParams = ConstraintLayout.LayoutParams(0, 0).apply {
-                        dimensionRatio = "1:1"
-                    }
-                    scaleType = ImageView.ScaleType.CENTER_CROP
-                }
-
-                // TextView for recipe title
-                val textView = TextView(context).apply {
-                    id = View.generateViewId()
-                    layoutParams = ConstraintLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
-                    textAlignment = View.TEXT_ALIGNMENT_CENTER
-                    setTextColor(context.getColor(R.color.text))
-                }
-
-                addView(imageView)
-                addView(textView)
-
-                // Set constraints programmatically using ConstraintSet
-                val constraintSet = ConstraintSet()
-                constraintSet.clone(this)
-                constraintSet.connect(imageView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-                constraintSet.connect(imageView.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-                constraintSet.connect(imageView.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-                constraintSet.connect(textView.id, ConstraintSet.TOP, imageView.id, ConstraintSet.BOTTOM)
-                constraintSet.connect(textView.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-                constraintSet.connect(textView.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-                constraintSet.applyTo(this)
-            }
+            // Inflate the item layout
+            val itemLayout = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_recipe, parent, false)
 
             return RecipeViewHolder(itemLayout)
         }
@@ -142,9 +117,8 @@ class SearchFragment : Fragment() {
 
         inner class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-            // Directly reference the views using the IDs
-            private val recipeImage: ImageView = itemView.findViewById(itemView.findViewById<ImageView>(View.generateViewId()).id)
-            private val recipeTitle: TextView = itemView.findViewById(itemView.findViewById<TextView>(View.generateViewId()).id)
+            private val recipeImage: ImageView = itemView.findViewById(R.id.recipeImage)
+            private val recipeTitle: TextView = itemView.findViewById(R.id.recipeTitle)
 
             fun bind(recipe: MealDto.Recipe) {
                 recipeTitle.text = recipe.name
