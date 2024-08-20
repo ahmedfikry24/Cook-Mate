@@ -19,6 +19,7 @@ class HomeViewModel(
 ) : ViewModel() {
 
     val categories = MutableLiveData<List<CategoryInfo>>(listOf())
+    val meals = MutableLiveData<List<RecipeInfo>>(listOf())
     val events = MutableLiveData<HomeEvents>(HomeEvents.Idle)
 
     fun getCategories() {
@@ -28,11 +29,22 @@ class HomeViewModel(
                 result.map {
                     it.toUiSate {
                         viewModelScope.launch {
-                            events.postValue(
-                                HomeEvents.OnClickCategory(
-                                    it
-                                )
-                            )
+                            events.postValue(HomeEvents.OnClickCategory(it))
+                        }
+                    }
+                }
+            )
+        }
+    }
+
+    fun getMealsByCategory(name: String) {
+        viewModelScope.launch((Dispatchers.IO)) {
+            val result = repository.getMealsByCategoryName(name)
+            meals.postValue(
+                result.map {
+                    it.toUiState {
+                        viewModelScope.launch {
+                            events.postValue(HomeEvents.OnClickMeal(it))
                         }
                     }
                 }
