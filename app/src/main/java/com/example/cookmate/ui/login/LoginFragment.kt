@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.cookmate.R
 import com.example.cookmate.data.local.RoomManager
+import com.example.cookmate.data.local.entity.RegisterEntity
 import com.example.cookmate.data.local.shared_pref.SharedPrefManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,6 +46,18 @@ class LoginFragment : Fragment() {
         signInButton.setOnClickListener { handleLogin() }
 
         return rootView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Insert a test user into the database
+        CoroutineScope(Dispatchers.IO).launch {
+            // Ensure the fragment is still attached before accessing the context
+            if (isAdded) {
+                val authDao = RoomManager.getInit(requireContext()).authDao
+                authDao.addUser(RegisterEntity(name = "testuser", password = "testpassword", email = "test@example.com"))
+            }
+        }
     }
 
     private fun initViews(rootView: View) {
