@@ -21,9 +21,17 @@ class HomeViewModel(
     val categories = MutableLiveData<List<CategoryInfo>>(listOf())
     val categoriesRecipes = MutableLiveData<List<RecipeInfo>>(listOf())
     val recipesOfDay = MutableLiveData<List<RecipeInfo>>(listOf())
+    val favoriteRecipes = MutableLiveData<List<RecipeInfo>>(listOf())
     val events = MutableLiveData<HomeEvents>(HomeEvents.Idle)
 
-    fun getCategories() {
+
+    fun getDate() {
+        getCategories()
+        getRecipeOfDay()
+        getFavoriteRecipes()
+    }
+
+    private fun getCategories() {
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getAllCategories()
             categories.postValue(
@@ -53,7 +61,7 @@ class HomeViewModel(
         }
     }
 
-    fun getRecipeOfDay() {
+    private fun getRecipeOfDay() {
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getRandomMeal()
             recipesOfDay.postValue(
@@ -62,6 +70,20 @@ class HomeViewModel(
                         viewModelScope.launch {
                             events.postValue(HomeEvents.OnClickMeal(it))
                         }
+                    }
+                }
+            )
+        }
+    }
+
+
+    private fun getFavoriteRecipes() {
+        viewModelScope.launch(Dispatchers.Default) {
+            val result = repository.getAllFavouriteRecipes()
+            favoriteRecipes.postValue(
+                result.map {
+                    it.toUiState {
+                        viewModelScope.launch { events.postValue(HomeEvents.OnClickMeal(it)) }
                     }
                 }
             )
