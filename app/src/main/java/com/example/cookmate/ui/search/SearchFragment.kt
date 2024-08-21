@@ -47,7 +47,7 @@ class SearchFragment : Fragment() {
             override suspend fun getAllUsers(): List<RegisterEntity> = emptyList()
             override suspend fun addFavouriteRecipe(recipe: FavouriteRecipeEntity) { /* No-op */ }
             override suspend fun getAllFavouriteRecipes(): List<FavouriteRecipeEntity> = emptyList()
-            override suspend fun removeFavouriteRecipe(recipeId: Int) { /* No-op */ }
+            override suspend fun removeFavouriteRecipe(recipeId: String) {}
         }
 
         // Initialize the repository with the dummy LocalDataSource and RemoteDataSourceImpl

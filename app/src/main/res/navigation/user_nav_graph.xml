@@ -36,13 +36,10 @@
         android:id="@+id/recipeDetailsFragment"
         android:name="com.example.cookmate.ui.recipe_details.RecipeDetailsFragment"
         android:label="fragment_recipe_details"
-        tools:layout="@layout/fragment_recipe_details">
-
-        <!-- Argument for recipeId, required for safe Args -->
+        tools:layout="@layout/fragment_recipe_details" >
         <argument
-            android:name="recipeId"
+            android:name="id"
             app:argType="string" />
-
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
