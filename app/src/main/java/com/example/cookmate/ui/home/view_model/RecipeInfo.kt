@@ -9,25 +9,22 @@ data class RecipeInfo(
     val url: String = "",
     val area: String = "",
     val category: String = "",
-    val onClick: (String) -> Unit = {},
 )
 
-fun MealDto.Recipe.toUiState(onClick: (String) -> Unit): RecipeInfo {
+fun MealDto.Recipe.toUiState(): RecipeInfo {
     return RecipeInfo(
         id = this.id ?: "",
         name = this.name ?: "",
         url = this.imageUrl ?: "",
         area = this.strArea ?: "",
-        category = this.category ?: "",
-        onClick = onClick
+        category = this.category ?: ""
     )
 }
 
-fun FavouriteRecipeEntity.toUiState(onClick: (String) -> Unit): RecipeInfo {
+fun FavouriteRecipeEntity.toUiState(): RecipeInfo {
     return RecipeInfo(
         id = this.id,
         name = this.name,
-        url = this.imageUrl,
-        onClick = onClick
+        url = this.imageUrl
     )
 }
