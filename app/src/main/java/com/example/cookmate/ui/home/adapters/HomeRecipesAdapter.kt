@@ -9,11 +9,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.cookmate.R
+import com.example.cookmate.ui.home.view_model.HomeInteractions
 import com.example.cookmate.ui.home.view_model.RecipeInfo
 import com.example.cookmate.ui.utils.loadImageUrl
 
 class HomeRecipesAdapter(
     private var recipes: List<RecipeInfo>,
+    private val interactions: HomeInteractions,
 ) : RecyclerView.Adapter<HomeRecipesAdapter.RecipeViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
@@ -29,15 +31,16 @@ class HomeRecipesAdapter(
         holder.apply {
             image.loadImageUrl(item.url)
             text.text = item.name
-            holder.itemView.setOnClickListener { item.onClick(item.id) }
+            holder.itemView.setOnClickListener { interactions.onClickRecipe(item.id) }
         }
     }
 
     fun updateRecipes(newItems: List<RecipeInfo>) {
-        val diffUtil = DiffUtil.calculateDiff(RecipeDiffUtil(recipes, newItems))
+        val diffUtil = DiffUtil.calculateDiff(HomeRecipeDiffUtil(recipes, newItems))
         recipes = newItems
         diffUtil.dispatchUpdatesTo(this)
     }
+
     class RecipeViewHolder(view: View) : ViewHolder(view) {
         val image: ImageFilterView = view.findViewById(R.id.image_recipe)
         val text: TextView = view.findViewById(R.id.text_recipe)

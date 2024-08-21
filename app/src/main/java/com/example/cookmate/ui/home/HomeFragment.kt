@@ -54,7 +54,7 @@ class HomeFragment : Fragment() {
 
     private fun initViews(view: View) {
         mainRecycler = view.findViewById(R.id.main_recycler)
-        mainAdapter = MainAdapter(listOf(), listOf())
+        mainAdapter = MainAdapter(listOf(), listOf(), viewModel)
         mainRecycler.adapter = mainAdapter
         progressBar = view.findViewById(R.id.home_progress_bar)
         navController = findNavController()

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.cookmate.R
 import com.example.cookmate.ui.home.view_model.CategoryInfo
+import com.example.cookmate.ui.home.view_model.HomeInteractions
 import com.example.cookmate.ui.home.view_model.RecipeInfo
 import com.example.cookmate.ui.utils.loadImageUrl
 import com.google.android.material.tabs.TabLayout
@@ -20,10 +21,11 @@ import com.google.android.material.tabs.TabLayout
 class MainAdapter(
     private var categories: List<CategoryInfo>,
     private var recipesOfDay: List<RecipeInfo>,
+    private val interactions: HomeInteractions,
 ) : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
 
-    val recipesAdapter = HomeRecipesAdapter(listOf())
-    val favoriteAdapter = HomeFavoriteAdapter(listOf())
+    val recipesAdapter = HomeRecipesAdapter(listOf(), interactions)
+    val favoriteAdapter = HomeFavoriteAdapter(listOf(), interactions)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         return when (viewType) {
@@ -64,7 +66,7 @@ class MainAdapter(
             tabLayout.removeAllTabs()
             categories.forEachIndexed { index, category ->
                 if (index == 0) {
-                    categories[index].onClick(categories[index].name)
+                    interactions.onClickCategory(categories[index].name)
                 }
                 val tab = tabLayout.newTab()
                 val customView =
@@ -93,7 +95,7 @@ class MainAdapter(
                         val text = it.findViewById<TextView>(R.id.tab_text)
                         text.setTextColor(text.context.getColor(R.color.background))
                     }
-                    categories[tab?.position ?: 0].onClick(categories[tab?.position ?: 0].name)
+                    interactions.onClickCategory(categories[tab?.position ?: 0].name)
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -111,7 +113,7 @@ class MainAdapter(
 
     fun updateCategories(newItems: List<CategoryInfo>) {
         val diffUtil = DiffUtil.calculateDiff(
-            MainAdapterDiffUtil(
+            MainDiffUtil(
                 categories,
                 newItems,
                 areItemsTheSame = { oldItem, newItem -> oldItem.id == newItem.id },
@@ -135,13 +137,13 @@ class MainAdapter(
                 title.text = item.name
                 area.text = item.area
                 category.text = item.category
-                itemView.setOnClickListener { item.onClick(item.id) }
+                itemView.setOnClickListener { interactions.onClickRecipe(item.id) }
             }
     }
 
     fun updateRecipesOfDay(newItems: List<RecipeInfo>) {
         val diffUtil = DiffUtil.calculateDiff(
-            MainAdapterDiffUtil(
+            MainDiffUtil(
                 recipesOfDay,
                 newItems,
                 areItemsTheSame = { oldItem, newItem -> oldItem.id == newItem.id },
@@ -155,6 +157,7 @@ class MainAdapter(
         holder.apply {
             recycler.adapter = favoriteAdapter
             sectionTitle.isVisible = favoriteAdapter.recipes.isNotEmpty()
+            more.setOnClickListener { interactions.onClickFavoriteMore() }
         }
     }
 
@@ -180,6 +183,7 @@ class MainAdapter(
     class FavoriteViewHolder(view: View) : MainViewHolder(view) {
         val recycler: RecyclerView = view.findViewById(R.id.home_favorite_recycler)
         val sectionTitle: LinearLayout = view.findViewById(R.id.section_title)
+        val more: TextView = view.findViewById(R.id.favorite_more)
     }
 
     companion object {
