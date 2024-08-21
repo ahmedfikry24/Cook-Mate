@@ -1,6 +1,5 @@
 package com.example.cookmate.ui.login
 
-//import android.content.Context
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -20,7 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.cookmate.R
 import com.example.cookmate.data.local.RoomManager
-import com.example.cookmate.data.local.entity.RegisterEntity
+//import com.example.cookmate.data.local.entity.RegisterEntity
 import com.example.cookmate.data.local.shared_pref.SharedPrefManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,84 +39,82 @@ class LoginFragment : Fragment() {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_login, container, false)
 
-        // Initialize the shared preferences
-        SharedPrefManager.init(requireContext())
+        initViews(rootView)
+        setupSignUpText()
+        handleAutoLogin()
 
-        // Check if the user is already logged in
-        if (SharedPrefManager.isLogin) {
-            val navController = findNavController()
-            navController.setGraph(R.navigation.user_nav_graph)
-            navController.navigate(R.id.homeFragment)
-            return rootView
-        }
+        signInButton.setOnClickListener { handleLogin() }
 
+        return rootView
+    }
+
+    private fun initViews(rootView: View) {
         nameInput = rootView.findViewById(R.id.nameInput)
         passwordInput = rootView.findViewById(R.id.passwordInput)
         signInButton = rootView.findViewById(R.id.signInButton)
         signUpTextView = rootView.findViewById(R.id.signUp)
+    }
 
-        // For testing purposes, since nothing exists in the database yet
-        CoroutineScope(Dispatchers.IO).launch {
-            val authDao = RoomManager.getInit(requireContext()).authDao
-            authDao.addUser(RegisterEntity(name = "testuser", password = "testpassword", email = "test"))
-        }
-
-        // Logic for "Sign Up" text with yellow color and clickable action
+    private fun setupSignUpText() {
         val signUpText = "Don't have an account? Sign Up"
         val spannableString = SpannableString(signUpText)
-
-        // Set the yellow color for "Sign Up"
         val yellowColor = ContextCompat.getColor(requireContext(), R.color.secondary)
-        val yellowColorSpan = ForegroundColorSpan(yellowColor)
-        spannableString.setSpan(yellowColorSpan, 23, signUpText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        // Make "Sign Up" clickable
-        val clickableSpan = object : ClickableSpan() {
+        spannableString.setSpan(
+            ForegroundColorSpan(yellowColor),
+            23, signUpText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        spannableString.setSpan(object : ClickableSpan() {
             override fun onClick(widget: View) {
                 findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
             }
 
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
-                ds.color = yellowColor // Ensures the text stays yellow
+                ds.color = yellowColor
                 ds.isUnderlineText = true
             }
-        }
-        spannableString.setSpan(clickableSpan, 23, signUpText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }, 23, signUpText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        // Apply the SpannableString to the TextView
         signUpTextView.text = spannableString
-        signUpTextView.movementMethod = LinkMovementMethod.getInstance() // Enable clicking on the span
+        signUpTextView.movementMethod = LinkMovementMethod.getInstance()
         signUpTextView.highlightColor = ContextCompat.getColor(requireContext(), android.R.color.transparent)
+    }
 
-        signInButton.setOnClickListener {
-            val name = nameInput.text.toString().trim()
-            val password = passwordInput.text.toString().trim()
+    private fun handleAutoLogin() {
+        SharedPrefManager.init(requireContext())
+        if (SharedPrefManager.isLogin) {
+            navigateToHome()
+        }
+    }
 
-            if (name.isEmpty() || password.isEmpty()) {
-                Toast.makeText(requireContext(), "Please enter both name and password.", Toast.LENGTH_SHORT).show()
-            } else {
-                CoroutineScope(Dispatchers.IO).launch {
-                    val authDao = RoomManager.getInit(requireContext()).authDao
-                    val userExists = authDao.getAllUsers().any { it.name == name && it.password == password }
+    private fun handleLogin() {
+        val name = nameInput.text.toString().trim()
+        val password = passwordInput.text.toString().trim()
 
-                    withContext(Dispatchers.Main) {
-                        if (userExists) {
-                            // Update the login status using SharedPrefManager
-                            SharedPrefManager.isLogin = true
+        if (name.isEmpty() || password.isEmpty()) {
+            Toast.makeText(requireContext(), "Please enter both name and password.", Toast.LENGTH_SHORT).show()
+        } else {
+            CoroutineScope(Dispatchers.IO).launch {
+                val authDao = RoomManager.getInit(requireContext()).authDao
+                val userExists = authDao.getAllUsers().any { it.name == name && it.password == password }
 
-                            // Switch to the user_nav_graph and navigate to HomeFragment
-                            val navController = findNavController()
-                            navController.setGraph(R.navigation.user_nav_graph)
-                            navController.navigate(R.id.homeFragment)
-                        } else {
-                            Toast.makeText(requireContext(), "Wrong name or password, please try again.", Toast.LENGTH_SHORT).show()
-                        }
+                withContext(Dispatchers.Main) {
+                    if (userExists) {
+                        SharedPrefManager.isLogin = true
+                        navigateToHome()
+                    } else {
+                        Toast.makeText(requireContext(), "Wrong name or password, please try again.", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
+    }
 
-        return rootView
+    private fun navigateToHome() {
+        val navController = findNavController()
+        navController.setGraph(R.navigation.user_nav_graph)
+        navController.navigate(R.id.homeFragment)
     }
 }
