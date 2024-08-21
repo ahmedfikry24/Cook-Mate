@@ -16,7 +16,7 @@ class HomeViewModelFactory(private val repository: Repository) : ViewModelProvid
 
 class HomeViewModel(
     private val repository: Repository,
-) : ViewModel() {
+) : ViewModel(), HomeInteractions {
 
     val categories = MutableLiveData<List<CategoryInfo>>(listOf())
     val categoriesRecipes = MutableLiveData<List<RecipeInfo>>(listOf())
@@ -34,45 +34,21 @@ class HomeViewModel(
     private fun getCategories() {
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getAllCategories()
-            categories.postValue(
-                result.map {
-                    it.toUiSate {
-                        viewModelScope.launch {
-                            events.postValue(HomeEvents.OnClickCategory(it))
-                        }
-                    }
-                }
-            )
+            categories.postValue(result.map { it.toUiSate() })
         }
     }
 
     fun getMealsByCategory(name: String) {
         viewModelScope.launch((Dispatchers.IO)) {
             val result = repository.getMealsByCategoryName(name)
-            categoriesRecipes.postValue(
-                result.map {
-                    it.toUiState {
-                        viewModelScope.launch {
-                            events.postValue(HomeEvents.OnClickMeal(it))
-                        }
-                    }
-                }
-            )
+            categoriesRecipes.postValue(result.map { it.toUiState() })
         }
     }
 
     private fun getRecipeOfDay() {
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getRandomMeal()
-            recipesOfDay.postValue(
-                result.map {
-                    it.toUiState {
-                        viewModelScope.launch {
-                            events.postValue(HomeEvents.OnClickMeal(it))
-                        }
-                    }
-                }
-            )
+            recipesOfDay.postValue(result.map { it.toUiState() })
         }
     }
 
@@ -80,14 +56,20 @@ class HomeViewModel(
     private fun getFavoriteRecipes() {
         viewModelScope.launch(Dispatchers.Default) {
             val result = repository.getAllFavouriteRecipes()
-            favoriteRecipes.postValue(
-                result.map {
-                    it.toUiState {
-                        viewModelScope.launch { events.postValue(HomeEvents.OnClickMeal(it)) }
-                    }
-                }
-            )
+            favoriteRecipes.postValue(result.map { it.toUiState() })
         }
+    }
+
+    override fun onClickCategory(name: String) {
+        viewModelScope.launch { events.postValue(HomeEvents.OnClickCategory(name)) }
+    }
+
+    override fun onClickRecipe(id: String) {
+        viewModelScope.launch { events.postValue(HomeEvents.OnClickMeal(id)) }
+    }
+
+    override fun onClickFavoriteMore() {
+
     }
 
 }
