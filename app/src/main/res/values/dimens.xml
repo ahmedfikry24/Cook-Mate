@@ -3,7 +3,7 @@
     <dimen name="space4">4dp</dimen>
     <dimen name="space8">8dp</dimen>
     <dimen name="space12">12dp</dimen>
-    <dimen name="space16">16sp</dimen>
-    <dimen name="space20">20sp</dimen>
-    <dimen name="space24">24sp</dimen>
+    <dimen name="space16">16dp</dimen>
+    <dimen name="space20">20dp</dimen>
+    <dimen name="space24">24dp</dimen>
 </resources>
