@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.cookmate.R
 import com.example.cookmate.data.local.RoomManager
-//import com.example.cookmate.data.local.entity.RegisterEntity
 import com.example.cookmate.data.local.shared_pref.SharedPrefManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
