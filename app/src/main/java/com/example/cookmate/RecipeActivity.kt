@@ -75,6 +75,32 @@ class RecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
     private fun setupBottomNav() {
         findViewById<BottomNavigationView>(R.id.bottom_nav).setupWithNavController(navController)
+        findViewById<BottomNavigationView>(R.id.bottom_nav).setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.homeFragment -> {
+                    if (navController.currentDestination?.id != R.id.homeFragment) {
+                        navController.popBackStack(R.id.homeFragment, false)
+                    }
+                    true
+                }
+
+                R.id.searchFragment -> {
+                    if (navController.currentDestination?.id != R.id.searchFragment) {
+                        navController.navigate(R.id.searchFragment)
+                    }
+                    true
+                }
+
+                R.id.favouriteFragment -> {
+                    if (navController.currentDestination?.id != R.id.favouriteFragment) {
+                        navController.navigate(R.id.favouriteFragment)
+                    }
+                    true
+                }
+
+                else -> false
+            }
+        }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
