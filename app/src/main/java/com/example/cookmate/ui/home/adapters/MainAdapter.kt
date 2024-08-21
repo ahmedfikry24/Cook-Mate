@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -21,6 +23,7 @@ class MainAdapter(
 ) : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
 
     val recipesAdapter = RecipesAdapter(listOf())
+    val favoriteAdapter = HomeFavoriteAdapter(listOf())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         return when (viewType) {
@@ -34,9 +37,14 @@ class MainAdapter(
                     .inflate(R.layout.home_recipes, parent, false)
             )
 
-            else -> RecipeOfDayViewHolder(
+            THIRD_VIEW -> RecipeOfDayViewHolder(
                 LayoutInflater.from(parent.context)
                     .inflate(R.layout.home_recipe_of_day, parent, false)
+            )
+
+            else -> FavoriteViewHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.home_favorite_recips, parent, false)
             )
         }
     }
@@ -46,6 +54,7 @@ class MainAdapter(
             is CategoriesTabsViewHolder -> onBindCategoriesTabs(holder)
             is RecipesViewHolder -> onBindRecipes(holder)
             is RecipeOfDayViewHolder -> onBindRecipeOfDay(holder)
+            is FavoriteViewHolder -> onBindFavorites(holder)
         }
     }
 
@@ -146,7 +155,14 @@ class MainAdapter(
         diffUtil.dispatchUpdatesTo(this)
     }
 
-    override fun getItemCount() = 3
+    private fun onBindFavorites(holder: FavoriteViewHolder) {
+        holder.apply {
+            recycler.adapter = favoriteAdapter
+            sectionTitle.isVisible = favoriteAdapter.recipes.isNotEmpty()
+        }
+    }
+
+    override fun getItemCount() = 4
     override fun getItemViewType(position: Int) = position
 
     abstract class MainViewHolder(view: View) : ViewHolder(view)
@@ -165,8 +181,14 @@ class MainAdapter(
         val category: TextView = view.findViewById(R.id.category_recipe)
     }
 
+    class FavoriteViewHolder(view: View) : MainViewHolder(view) {
+        val recycler: RecyclerView = view.findViewById(R.id.home_favorite_recycler)
+        val sectionTitle: LinearLayout = view.findViewById(R.id.section_title)
+    }
+
     companion object {
         private const val FIRST_VIEW = 0
         private const val SECOND_VIEW = 1
+        private const val THIRD_VIEW = 2
     }
 }

@@ -10,4 +10,6 @@
     <string name="close">close</string>
     <string name="open">open</string>
     <string name="recipe_of_day">Recipe Of Day</string>
+    <string name="favorites">Favorites</string>
+    <string name="more">More</string>
 </resources>

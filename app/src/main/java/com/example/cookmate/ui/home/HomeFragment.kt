@@ -36,8 +36,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.getCategories()
-        viewModel.getRecipeOfDay()
+        viewModel.getDate()
     }
 
     override fun onCreateView(
@@ -72,6 +71,10 @@ class HomeFragment : Fragment() {
         }
         viewModel.recipesOfDay.observe(viewLifecycleOwner) { recipes ->
             mainAdapter.updateRecipesOfDay(recipes)
+        }
+
+        viewModel.favoriteRecipes.observe(viewLifecycleOwner) { recipes ->
+            mainAdapter.favoriteAdapter.updateRecipes(recipes)
         }
         viewModel.events.observe(viewLifecycleOwner) { event ->
             when (event) {
