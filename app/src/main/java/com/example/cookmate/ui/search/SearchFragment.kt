@@ -14,4 +14,5 @@ class SearchFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_search, container, false)
     }
+
 }
