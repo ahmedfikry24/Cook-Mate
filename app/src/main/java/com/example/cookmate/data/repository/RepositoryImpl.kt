@@ -28,7 +28,7 @@ class RepositoryImpl(
         return localDataSource.getAllFavouriteRecipes()
     }
 
-    override suspend fun removeFavouriteRecipe(recipeId: Int) {
+    override suspend fun removeFavouriteRecipe(recipeId: String) {
         localDataSource.removeFavouriteRecipe(recipeId)
     }
 
@@ -36,8 +36,12 @@ class RepositoryImpl(
         return remoteDataSource.recipeSearch(name)
     }
 
-    override suspend fun getMealById(id: Int): List<MealDto.Recipe> {
+    override suspend fun getMealById(id: String): List<MealDto.Recipe> {
         return remoteDataSource.getMealById(id)
+    }
+
+    override suspend fun getMealsByCategoryName(name: String): List<MealDto.Recipe> {
+        return remoteDataSource.getMealsByCategoryName(name)
     }
 
     override suspend fun getAllCategories(): List<CategoryDto.CategoriesItem> {
