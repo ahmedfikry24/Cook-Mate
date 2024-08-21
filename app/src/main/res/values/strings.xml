@@ -2,4 +2,19 @@
     <string name="app_name">Cook Mate</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="create_an_account">Create an account</string>
+    <string name="set_up_your_account">Let\'s help you set up your account, it won\'t take long.</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="accept_terms_condition"><![CDATA[Accept terms & Condition]]></string>
+    <string name="enter_email">Enter Email</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="or_sign_in_with">Or Sign in With</string>
+    <string name="already_a_member">"Already a member? "</string>
+    <string name="sign_in">Sign In</string>
+    <string name="retype_password">Retype Password</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
 </resources>
