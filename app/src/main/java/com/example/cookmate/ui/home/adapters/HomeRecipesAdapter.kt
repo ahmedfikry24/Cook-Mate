@@ -4,18 +4,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.bumptech.glide.Glide
 import com.example.cookmate.R
 import com.example.cookmate.ui.home.view_model.RecipeInfo
+import com.example.cookmate.ui.utils.loadImageUrl
 
-class RecipesAdapter(
+class HomeRecipesAdapter(
     private var recipes: List<RecipeInfo>,
-) : RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder>() {
+) : RecyclerView.Adapter<HomeRecipesAdapter.RecipeViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
         return RecipeViewHolder(
@@ -28,7 +27,7 @@ class RecipesAdapter(
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
         val item = recipes[position]
         holder.apply {
-            image.loadUrl(item.url)
+            image.loadImageUrl(item.url)
             text.text = item.name
             holder.itemView.setOnClickListener { item.onClick(item.id) }
         }
@@ -39,11 +38,6 @@ class RecipesAdapter(
         recipes = newItems
         diffUtil.dispatchUpdatesTo(this)
     }
-
-    private fun AppCompatImageView.loadUrl(url: String) {
-        Glide.with(this).load(url).into(this)
-    }
-
     class RecipeViewHolder(view: View) : ViewHolder(view) {
         val image: ImageFilterView = view.findViewById(R.id.image_recipe)
         val text: TextView = view.findViewById(R.id.text_recipe)

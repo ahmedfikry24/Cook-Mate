@@ -11,10 +11,10 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.bumptech.glide.Glide
 import com.example.cookmate.R
 import com.example.cookmate.ui.home.view_model.CategoryInfo
 import com.example.cookmate.ui.home.view_model.RecipeInfo
+import com.example.cookmate.ui.utils.loadImageUrl
 import com.google.android.material.tabs.TabLayout
 
 class MainAdapter(
@@ -22,7 +22,7 @@ class MainAdapter(
     private var recipesOfDay: List<RecipeInfo>,
 ) : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
 
-    val recipesAdapter = RecipesAdapter(listOf())
+    val recipesAdapter = HomeRecipesAdapter(listOf())
     val favoriteAdapter = HomeFavoriteAdapter(listOf())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
@@ -131,16 +131,12 @@ class MainAdapter(
         if (recipesOfDay.isNotEmpty())
             holder.apply {
                 val item = recipesOfDay.first()
-                image.loadUrl(item.url)
+                image.loadImageUrl(item.url)
                 title.text = item.name
                 area.text = item.area
                 category.text = item.category
                 itemView.setOnClickListener { item.onClick(item.id) }
             }
-    }
-
-    private fun AppCompatImageView.loadUrl(url: String) {
-        Glide.with(this).load(url).into(this)
     }
 
     fun updateRecipesOfDay(newItems: List<RecipeInfo>) {
