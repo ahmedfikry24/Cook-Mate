@@ -178,7 +178,7 @@
 
         <!-- Sign Up Button -->
         <Button
-            android:theme="@style/customButton"
+            android:background="@drawable/green_button_background"
             android:id="@+id/signUpButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
