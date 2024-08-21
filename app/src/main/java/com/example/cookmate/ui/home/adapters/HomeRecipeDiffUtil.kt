@@ -3,7 +3,7 @@ package com.example.cookmate.ui.home.adapters
 import androidx.recyclerview.widget.DiffUtil
 import com.example.cookmate.ui.home.view_model.RecipeInfo
 
-class RecipeDiffUtil(
+class HomeRecipeDiffUtil(
     private val oldItems: List<RecipeInfo>,
     private val newItems: List<RecipeInfo>,
 ) : DiffUtil.Callback() {
