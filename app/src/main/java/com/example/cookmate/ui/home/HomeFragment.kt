@@ -85,6 +85,8 @@ class HomeFragment : Fragment() {
                         HomeFragmentDirections.actionHomeFragmentToRecipeDetailsFragment(event.id)
                     navController.navigate(direction)
                 }
+
+                HomeEvents.OnCLickFavoriteMore -> navController.navigate(R.id.favouriteFragment)
             }
             viewModel.events.postValue(HomeEvents.Idle)
         }

@@ -69,7 +69,7 @@ class HomeViewModel(
     }
 
     override fun onClickFavoriteMore() {
-
+        viewModelScope.launch { events.postValue(HomeEvents.OnCLickFavoriteMore) }
     }
 
 }
