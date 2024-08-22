@@ -38,16 +38,29 @@ class LoginFragment : Fragment() {
     private val repository by lazy { RepositoryImpl(remoteDataSource, localDataSource) }
     private val viewModel by viewModels<LoginViewModel> { LoginViewModelFactory(repository) }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Initialization logic
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        val rootView = inflater.inflate(R.layout.fragment_login, container, false)
-        initViews(rootView)
+        return inflater.inflate(R.layout.fragment_login, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initViews(view)
         setupSignUpText()
         observeViewModel()
-        signInButton.setOnClickListener { viewModel.onLoginClicked() }
-        return rootView
+        signInButton.setOnClickListener {
+            viewModel.onLoginClicked(
+                nameInput.text.toString(),
+                passwordInput.text.toString()
+            )
+        }
     }
 
     private fun initViews(rootView: View) {
@@ -85,13 +98,10 @@ class LoginFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.username.observe(viewLifecycleOwner) { nameInput.setText(it) }
-        viewModel.password.observe(viewLifecycleOwner) { passwordInput.setText(it) }
-
         viewModel.inputError.observe(viewLifecycleOwner) { errorMessage ->
             errorMessage?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-                viewModel.clearInputError() // Clear error after displaying it
+                viewModel.clearInputError()
             }
         }
 
