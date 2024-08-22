@@ -8,8 +8,16 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.cookmate.R
+import com.example.cookmate.data.local.RoomManager
+import com.example.cookmate.data.local.entity.RegisterEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RegisterFragment : Fragment() {
 
@@ -32,7 +40,6 @@ class RegisterFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_register, container, false)
 
         // Initialize views
@@ -64,7 +71,6 @@ class RegisterFragment : Fragment() {
     }
 
     private fun handleSignUp() {
-        // Handle sign up logic here
         val name = nameEditText.text.toString().trim()
         val email = emailEditText.text.toString().trim()
         val password = passwordEditText.text.toString().trim()
@@ -73,13 +79,23 @@ class RegisterFragment : Fragment() {
 
         if (validateInputs(name, email, password, confirmPassword, termsAccepted)) {
             // Proceed with sign up process
+            val registerEntity = RegisterEntity(name = name, email = email, password = password)
+
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    val db = RoomManager.getInit(requireContext())
+                    db.authDao.addUser(registerEntity)
+                }
+                // Navigate to login fragment after successful registration
+                findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+            }
         } else {
-            // Show validation errors
+            // Show a message if inputs are not valid
+            Toast.makeText(requireContext(), "Please correct the errors", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun validateInputs(name: String, email: String, password: String, confirmPassword: String, termsAccepted: Boolean): Boolean {
-        // Add your input validation logic here
         return when {
             name.isEmpty() -> {
                 nameEditText.error = "Name is required"
@@ -106,6 +122,6 @@ class RegisterFragment : Fragment() {
     }
 
     private fun navigateToSignIn() {
-        // Navigate to sign-in screen
+        findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
     }
 }
