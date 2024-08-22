@@ -81,27 +81,25 @@
             android:layout_marginHorizontal="@dimen/space16"
             android:layout_marginTop="@dimen/space16"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="7">
 
             <TextView
                 android:id="@+id/title_recipe"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_bold"
                 android:textColor="@color/light_text"
-                android:textSize="14sp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="6"
+                android:textSize="16sp" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/favorite_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="end"
                 android:layout_marginStart="@dimen/space16"
+                android:layout_weight="1"
                 app:srcCompat="@drawable/ic_unfavorite" />
 
         </LinearLayout>

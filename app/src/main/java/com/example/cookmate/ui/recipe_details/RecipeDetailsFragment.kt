@@ -39,6 +39,7 @@ class RecipeDetailsFragment : Fragment() {
     private lateinit var instructions: TextView
     private lateinit var tags: LinearLayout
     private lateinit var ingredients: FlowLayout
+    private lateinit var favoriteIcon: AppCompatImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +65,7 @@ class RecipeDetailsFragment : Fragment() {
         instructions = view.findViewById(R.id.instructions)
         tags = view.findViewById(R.id.tags)
         ingredients = view.findViewById(R.id.ingredients)
+        favoriteIcon = view.findViewById(R.id.favorite_icon)
     }
 
     private fun viewModelObservers() {
@@ -71,37 +73,47 @@ class RecipeDetailsFragment : Fragment() {
             image.loadImageUrl(it.url)
             name.text = it.name
             instructions.text = it.instructions
+            favoriteIcon.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_favorite
+                )
+            )
             for (tag in it.tags) {
-                val textView = TextView(requireContext()).apply {
-                    text = tag
-                    textSize = 16f
-                    typeface = ResourcesCompat.getFont(context, R.font.poppins_regular)
-                    setPadding(8, 4, 8, 4)
-                    gravity = Gravity.CENTER
-                    background = ContextCompat.getDrawable(context, R.drawable.ingredient_shape)
+                if (tag.isNotBlank()) {
+                    val textView = TextView(requireContext()).apply {
+                        text = tag
+                        textSize = 16f
+                        typeface = ResourcesCompat.getFont(context, R.font.poppins_regular)
+                        setPadding(8, 4, 8, 4)
+                        gravity = Gravity.CENTER
+                        background = ContextCompat.getDrawable(context, R.drawable.ingredient_shape)
+                    }
+
+                    val layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+
+                        setMargins(8, 0, 8, 0)
+                    }
+
+                    tags.addView(textView, layoutParams)
                 }
-
-                val layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ).apply {
-
-                    setMargins(8, 0, 8, 0)
-                }
-
-                tags.addView(textView, layoutParams)
             }
 
             for (ingredient in it.ingredients) {
-                val textView = TextView(requireContext()).apply {
-                    text = ingredient
-                    textSize = 16f
-                    typeface = ResourcesCompat.getFont(context, R.font.poppins_regular)
-                    setPadding(8, 4, 8, 4)
-                    gravity = Gravity.CENTER
-                    background = ContextCompat.getDrawable(context, R.drawable.ingredient_shape)
+                if (ingredient.isNotBlank()) {
+                    val textView = TextView(requireContext()).apply {
+                        text = ingredient
+                        textSize = 16f
+                        typeface = ResourcesCompat.getFont(context, R.font.poppins_regular)
+                        setPadding(8, 4, 8, 4)
+                        gravity = Gravity.CENTER
+                        background = ContextCompat.getDrawable(context, R.drawable.ingredient_shape)
+                    }
+                    ingredients.addView(textView)
                 }
-                ingredients.addView(textView)
             }
 
         }
