@@ -145,7 +145,24 @@ class RecipeDetailsFragment : Fragment() {
             webView.isVisible = true
             webView.loadUrl(viewModel.recipe.value?.videoUrl ?: "")
         }
-        favoriteIcon.setOnClickListener { viewModel.onClickFavorite() }
+        favoriteIcon.setOnClickListener {
+            if (viewModel.isFavorite) {
+                favoriteIcon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_unfavorite
+                    )
+                )
+            } else {
+                favoriteIcon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_favorite
+                    )
+                )
+            }
+            viewModel.onClickFavorite()
+        }
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,

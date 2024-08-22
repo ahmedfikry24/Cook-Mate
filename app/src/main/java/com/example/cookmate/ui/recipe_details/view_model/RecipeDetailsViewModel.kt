@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.cookmate.data.local.entity.FavouriteRecipeEntity
 import com.example.cookmate.data.repository.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,7 +23,7 @@ class RecipeDetailsViewModel(
 ) : ViewModel() {
 
     val recipe = MutableLiveData<RecipeDetails>()
-    private var isFavorite: Boolean = false
+    var isFavorite: Boolean = false
 
     fun getRecipeInfo(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -34,6 +35,22 @@ class RecipeDetailsViewModel(
     }
 
     fun onClickFavorite() {
-
+        viewModelScope.launch {
+            val value = recipe.value
+            if (isFavorite) {
+                repository.removeFavouriteRecipe(recipe.value?.id ?: "")
+            } else {
+                repository.addFavouriteRecipe(
+                    FavouriteRecipeEntity(
+                        id = value?.id ?: "",
+                        name = value?.name ?: "",
+                        type = value?.category ?: "",
+                        area = value?.area ?: "",
+                        imageUrl = value?.imageUrl ?: ""
+                    )
+                )
+            }
+            isFavorite = !isFavorite
+        }
     }
 }
