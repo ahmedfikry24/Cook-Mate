@@ -1,7 +1,6 @@
 package com.example.cookmate.ui.login
 
 import android.os.Bundle
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -33,6 +31,18 @@ class LoginFragment : Fragment() {
     private val repository by lazy { RepositoryImpl(remoteDataSource, localDataSource) }
     private val viewModel by viewModels<LoginViewModel> { LoginViewModelFactory(repository) }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Initialize Shared Preferences if not already done
+        SharedPrefManager.init(requireContext())
+
+        // Check if the user is already logged in
+        if (SharedPrefManager.isLogin) {
+            navigateToHome()
+            return
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,8 +53,8 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initViews(view)
-        setupSignUpText()
         observeViewModel()
 
         signInButton.setOnClickListener {
@@ -54,7 +64,6 @@ class LoginFragment : Fragment() {
             )
         }
 
-        // Set the click listener for "Sign Up" TextView
         signUpTextView.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
@@ -65,10 +74,6 @@ class LoginFragment : Fragment() {
         passwordInput = rootView.findViewById(R.id.passwordInput)
         signInButton = rootView.findViewById(R.id.signInButton)
         signUpTextView = rootView.findViewById(R.id.signUp)
-    }
-
-    private fun setupSignUpText() {
-        // No additional setup needed for the "Sign Up" text since it is configured in XML.
     }
 
     private fun observeViewModel() {
