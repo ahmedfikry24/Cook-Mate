@@ -1,12 +1,7 @@
 package com.example.cookmate.ui.login
 
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
-import android.text.style.ForegroundColorSpan
-import android.text.TextPaint
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
+
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -38,10 +33,6 @@ class LoginFragment : Fragment() {
     private val repository by lazy { RepositoryImpl(remoteDataSource, localDataSource) }
     private val viewModel by viewModels<LoginViewModel> { LoginViewModelFactory(repository) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Initialization logic
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,11 +46,17 @@ class LoginFragment : Fragment() {
         initViews(view)
         setupSignUpText()
         observeViewModel()
+
         signInButton.setOnClickListener {
             viewModel.onLoginClicked(
                 nameInput.text.toString(),
                 passwordInput.text.toString()
             )
+        }
+
+        // Set the click listener for "Sign Up" TextView
+        signUpTextView.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
     }
 
@@ -71,30 +68,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupSignUpText() {
-        val signUpText = "Don't have an account? Sign Up"
-        val spannableString = SpannableString(signUpText)
-        val yellowColor = ContextCompat.getColor(requireContext(), R.color.secondary)
-
-        spannableString.setSpan(
-            ForegroundColorSpan(yellowColor),
-            23, signUpText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-
-        spannableString.setSpan(object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
-            }
-
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.color = yellowColor
-                ds.isUnderlineText = true
-            }
-        }, 23, signUpText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        signUpTextView.text = spannableString
-        signUpTextView.movementMethod = LinkMovementMethod.getInstance()
-        signUpTextView.highlightColor = ContextCompat.getColor(requireContext(), android.R.color.transparent)
+        // No additional setup needed for the "Sign Up" text since it is configured in XML.
     }
 
     private fun observeViewModel() {
