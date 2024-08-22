@@ -10,19 +10,21 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.widget.SearchView
 import com.example.cookmate.R
+import com.example.cookmate.data.local.RoomManager
 import com.example.cookmate.data.remote.RetrofitManager
 import com.example.cookmate.data.repository.RepositoryImpl
+import com.example.cookmate.data.source.LocalDataSourceImpl
 import com.example.cookmate.data.source.RemoteDataSourceImpl
 
 class SearchFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var searchView: SearchView
+    private lateinit var searchView: androidx.appcompat.widget.SearchView
 
     private val remoteDataSource by lazy { RemoteDataSourceImpl(RetrofitManager.service) }
-    private val repository by lazy { RepositoryImpl(remoteDataSource) }
+    private val localDataSource by lazy { LocalDataSourceImpl(RoomManager.getInit(requireContext())) } // Adding LocalDataSource
+    private val repository by lazy { RepositoryImpl(remoteDataSource, localDataSource) } // Using both sources here
     private val viewModel by viewModels<SearchViewModel> { SearchViewModelFactory(repository) }
 
     private val recipeAdapter by lazy { RecipeAdapter { recipeId ->
@@ -50,7 +52,7 @@ class SearchFragment : Fragment() {
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         recyclerView.adapter = recipeAdapter
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (!query.isNullOrEmpty()) {
                     viewModel.searchRecipes(query)
