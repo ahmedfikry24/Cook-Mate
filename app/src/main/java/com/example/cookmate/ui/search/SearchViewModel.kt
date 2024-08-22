@@ -12,16 +12,16 @@ import kotlinx.coroutines.launch
 class SearchViewModel(private val repository: Repository) : ViewModel() {
 
     private val _recipes = MutableLiveData<List<MealDto.Recipe>>()
-    val recipes: LiveData<List<MealDto.Recipe>> get() = _recipes
+    val recipes: LiveData<List<MealDto.Recipe>> = _recipes
 
     private val _errorMessage = MutableLiveData<String?>()
-    val errorMessage: LiveData<String?> get() = _errorMessage
+    val errorMessage: LiveData<String?> = _errorMessage
 
     fun searchRecipes(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val results = repository.recipeSearch(query)
-                _recipes.postValue(results)
+                val result = repository.recipeSearch(query)
+                _recipes.postValue(result)
             } catch (e: Exception) {
                 _errorMessage.postValue("Error fetching data")
             }
