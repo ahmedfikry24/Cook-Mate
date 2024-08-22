@@ -1,0 +1,34 @@
+package com.example.cookmate.ui.search
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.cookmate.data.model.MealDto
+import com.example.cookmate.data.repository.Repository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
+class SearchViewModel(private val repository: Repository) : ViewModel() {
+
+    private val _recipes = MutableLiveData<List<MealDto.Recipe>>()
+    val recipes: LiveData<List<MealDto.Recipe>> get() = _recipes
+
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> get() = _errorMessage
+
+    fun searchRecipes(query: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val results = repository.recipeSearch(query)
+                _recipes.postValue(results)
+            } catch (e: Exception) {
+                _errorMessage.postValue("Error fetching data")
+            }
+        }
+    }
+
+    fun clearErrorMessage() {
+        _errorMessage.value = null
+    }
+}
