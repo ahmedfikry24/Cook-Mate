@@ -1,7 +1,5 @@
-
 package com.example.cookmate.ui.login
 
-//import android.content.Context
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -18,15 +16,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cookmate.R
 import com.example.cookmate.data.local.RoomManager
-import com.example.cookmate.data.local.entity.RegisterEntity
-import com.example.cookmate.data.local.shared_pref.SharedPrefManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.cookmate.data.remote.RetrofitManager
+import com.example.cookmate.data.repository.RepositoryImpl
+import com.example.cookmate.data.source.LocalDataSourceImpl
+import com.example.cookmate.data.source.RemoteDataSourceImpl
 
 class LoginFragment : Fragment() {
 
@@ -35,31 +32,21 @@ class LoginFragment : Fragment() {
     private lateinit var signInButton: Button
     private lateinit var signUpTextView: TextView
 
+    private val localDataSource by lazy { LocalDataSourceImpl(RoomManager.getInit(requireContext())) }
+    private val remoteDataSource by lazy { RemoteDataSourceImpl(RetrofitManager.service) }
+    private val repository by lazy { RepositoryImpl(remoteDataSource, localDataSource) }
+    private val viewModel by viewModels<LoginViewModel> { LoginViewModelFactory(repository) }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_login, container, false)
-
         initViews(rootView)
         setupSignUpText()
-        handleAutoLogin()
-
-        signInButton.setOnClickListener { handleLogin() }
-
+        observeViewModel()
+        signInButton.setOnClickListener { viewModel.onLoginClicked() }
         return rootView
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        // Insert a test user into the database
-        CoroutineScope(Dispatchers.IO).launch {
-            // Ensure the fragment is still attached before accessing the context
-            if (isAdded) {
-                val authDao = RoomManager.getInit(requireContext()).authDao
-                authDao.addUser(RegisterEntity(name = "testuser", password = "testpassword", email = "test@example.com"))
-            }
-        }
     }
 
     private fun initViews(rootView: View) {
@@ -96,32 +83,23 @@ class LoginFragment : Fragment() {
         signUpTextView.highlightColor = ContextCompat.getColor(requireContext(), android.R.color.transparent)
     }
 
-    private fun handleAutoLogin() {
-        SharedPrefManager.init(requireContext())
-        if (SharedPrefManager.isLogin) {
-            navigateToHome()
+    private fun observeViewModel() {
+        viewModel.username.observe(viewLifecycleOwner) { nameInput.setText(it) }
+        viewModel.password.observe(viewLifecycleOwner) { passwordInput.setText(it) }
+
+        viewModel.inputError.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                viewModel.clearInputError() // Clear error after displaying it
+            }
         }
-    }
 
-    private fun handleLogin() {
-        val name = nameInput.text.toString().trim()
-        val password = passwordInput.text.toString().trim()
-
-        if (name.isEmpty() || password.isEmpty()) {
-            Toast.makeText(requireContext(), "Please enter both name and password.", Toast.LENGTH_SHORT).show()
-        } else {
-            CoroutineScope(Dispatchers.IO).launch {
-                val authDao = RoomManager.getInit(requireContext()).authDao
-                val userExists = authDao.getAllUsers().any { it.name == name && it.password == password }
-
-                withContext(Dispatchers.Main) {
-                    if (userExists) {
-                        SharedPrefManager.isLogin = true
-                        navigateToHome()
-                    } else {
-                        Toast.makeText(requireContext(), "Wrong name or password, please try again.", Toast.LENGTH_SHORT).show()
-                    }
-                }
+        viewModel.loginStatus.observe(viewLifecycleOwner) { userExists ->
+            if (userExists) {
+                SharedPrefManager.isLogin = true
+                navigateToHome()
+            } else {
+                Toast.makeText(requireContext(), "Wrong name or password, please try again.", Toast.LENGTH_SHORT).show()
             }
         }
     }
