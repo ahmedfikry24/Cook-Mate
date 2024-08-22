@@ -11,9 +11,10 @@ data class RecipeDetails(
     val category: String = "",
     val area: String = "",
     val ingredients: List<String> = listOf(),
+    val isFavorite: Boolean = false,
 )
 
-fun MealDto.Recipe.toUiState(): RecipeDetails {
+fun MealDto.Recipe.toUiState(isFavorite: Boolean): RecipeDetails {
     return RecipeDetails(
         id = this.id ?: "",
         name = this.name ?: "",
@@ -22,7 +23,8 @@ fun MealDto.Recipe.toUiState(): RecipeDetails {
         tags = getTagsList(this.tags ?: ""),
         category = this.category ?: "",
         area = this.area ?: "",
-        ingredients = getIngredientList(this)
+        ingredients = getIngredientList(this),
+        isFavorite = isFavorite
     )
 }
 

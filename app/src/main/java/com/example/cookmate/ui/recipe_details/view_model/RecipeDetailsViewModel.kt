@@ -27,7 +27,8 @@ class RecipeDetailsViewModel(
     fun getRecipeInfo(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getMealById(id)
-            recipe.postValue(result.map { it.toUiState() }.first())
+            val isFavorite = repository.getAllFavouriteRecipes().any { it.id == id }
+            recipe.postValue(result.map { it.toUiState(isFavorite) }.first())
         }
     }
 }
