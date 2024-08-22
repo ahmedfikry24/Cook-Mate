@@ -21,14 +21,19 @@ class RecipeDetailsViewModel(
     private val repository: Repository,
 ) : ViewModel() {
 
-
     val recipe = MutableLiveData<RecipeDetails>()
+    private var isFavorite: Boolean = false
 
     fun getRecipeInfo(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getMealById(id)
-            val isFavorite = repository.getAllFavouriteRecipes().any { it.id == id }
-            recipe.postValue(result.map { it.toUiState(isFavorite) }.first())
+            isFavorite = repository.getAllFavouriteRecipes().any { it.id == id }
+            if (result.isNotEmpty())
+                recipe.postValue(result.map { it.toUiState(isFavorite) }.first())
         }
+    }
+
+    fun onClickFavorite() {
+
     }
 }

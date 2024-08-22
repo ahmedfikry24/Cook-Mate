@@ -5,13 +5,18 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.cookmate.R
 import com.example.cookmate.data.local.RoomManager
@@ -34,12 +39,18 @@ class RecipeDetailsFragment : Fragment() {
         )
     }
     private val args: RecipeDetailsFragmentArgs by navArgs()
+    private val navController by lazy { findNavController() }
+
     private lateinit var image: AppCompatImageView
     private lateinit var name: TextView
     private lateinit var instructions: TextView
     private lateinit var tags: LinearLayout
     private lateinit var ingredients: FlowLayout
     private lateinit var favoriteIcon: AppCompatImageView
+    private lateinit var backIcon: AppCompatImageView
+    private lateinit var playVideoIcon: AppCompatImageView
+    private lateinit var mainContent: LinearLayout
+    private lateinit var webView: WebView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +67,7 @@ class RecipeDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
+        initListeners()
         viewModelObservers()
     }
 
@@ -66,19 +78,26 @@ class RecipeDetailsFragment : Fragment() {
         tags = view.findViewById(R.id.tags)
         ingredients = view.findViewById(R.id.ingredients)
         favoriteIcon = view.findViewById(R.id.favorite_icon)
+        backIcon = view.findViewById(R.id.back_icon)
+        playVideoIcon = view.findViewById(R.id.play_video_icon)
+        mainContent = view.findViewById(R.id.main_content)
+        webView = view.findViewById(R.id.web_view)
+        webView.settings.javaScriptEnabled = true
+        webView.webViewClient = WebViewClient()
     }
 
     private fun viewModelObservers() {
         viewModel.recipe.observe(viewLifecycleOwner) {
-            image.loadImageUrl(it.url)
+            image.loadImageUrl(it.imageUrl)
             name.text = it.name
             instructions.text = it.instructions
-            favoriteIcon.setImageDrawable(
-                ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_favorite
+            if (it.isFavorite)
+                favoriteIcon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_favorite
+                    )
                 )
-            )
             for (tag in it.tags) {
                 if (tag.isNotBlank()) {
                     val textView = TextView(requireContext()).apply {
@@ -118,4 +137,31 @@ class RecipeDetailsFragment : Fragment() {
 
         }
     }
+
+    private fun initListeners() {
+        backIcon.setOnClickListener { navController.popBackStack() }
+        playVideoIcon.setOnClickListener {
+            mainContent.isVisible = false
+            webView.isVisible = true
+            webView.loadUrl(viewModel.recipe.value?.videoUrl ?: "")
+        }
+        favoriteIcon.setOnClickListener { viewModel.onClickFavorite() }
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (!mainContent.isVisible) {
+                        mainContent.isVisible = true
+                        webView.isVisible = false
+                        webView.clearHistory()
+                    } else {
+                        isEnabled = false
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                    }
+                }
+            }
+        )
+    }
+
 }
