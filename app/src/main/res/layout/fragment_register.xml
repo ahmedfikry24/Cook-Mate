@@ -2,7 +2,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/registerfragment">
+    android:id="@+id/registerfragment"
+    android:background="@color/background">
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -13,8 +14,6 @@
         android:layout_margin="@dimen/space16"
         tools:context=".ui.register.RegisterFragment">
 
-        <!-- Your existing layout code -->
-        <!-- Title -->
         <TextView
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
@@ -26,7 +25,6 @@
             app:layout_constraintStart_toStartOf="parent"
             android:fontFamily="@font/poppins_bold"/>
 
-        <!-- Subtitle -->
         <TextView
             android:id="@+id/subtitleTextView"
             android:layout_width="0dp"
@@ -40,7 +38,6 @@
             app:layout_constraintEnd_toEndOf="@id/titleTextView"
             android:layout_marginTop="@dimen/space8"/>
 
-        <!-- Name Label -->
         <TextView
             android:id="@+id/nameLabelTextView"
             android:layout_width="wrap_content"
@@ -53,7 +50,6 @@
             app:layout_constraintTop_toBottomOf="@id/subtitleTextView"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Name Input -->
         <EditText
             android:id="@+id/nameEditText"
             android:layout_width="0dp"
@@ -70,7 +66,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Email Label -->
         <TextView
             android:id="@+id/emailLabelTextView"
             android:layout_width="wrap_content"
@@ -83,7 +78,6 @@
             app:layout_constraintTop_toBottomOf="@id/nameEditText"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Email Input -->
         <EditText
             android:id="@+id/emailEditText"
             android:layout_width="0dp"
@@ -100,7 +94,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Password Label -->
         <TextView
             android:id="@+id/passwordLabelTextView"
             android:layout_width="wrap_content"
@@ -113,7 +106,6 @@
             app:layout_constraintTop_toBottomOf="@id/emailEditText"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Password Input -->
         <EditText
             android:id="@+id/passwordEditText"
             android:layout_width="0dp"
@@ -130,7 +122,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Confirm Password Label -->
         <TextView
             android:id="@+id/confirmPasswordLabelTextView"
             android:layout_width="wrap_content"
@@ -143,7 +134,6 @@
             app:layout_constraintTop_toBottomOf="@id/passwordEditText"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Confirm Password Input -->
         <EditText
             android:id="@+id/confirmPasswordEditText"
             android:layout_width="0dp"
@@ -160,20 +150,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Terms and Conditions Checkbox -->
-        <CheckBox
-            android:id="@+id/termsCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/accept_terms_condition"
-            android:textColor="@color/secondary"
-            android:layout_marginTop="@dimen/space16"
-            android:fontFamily="@font/poppins_regular"
-            android:textSize="11sp"
-            app:layout_constraintTop_toBottomOf="@id/confirmPasswordEditText"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <!-- Sign Up Button -->
         <Button
             android:background="@drawable/ripple_green_button"
             android:id="@+id/signUpButton"
@@ -183,11 +159,11 @@
             android:padding="@dimen/space16"
             android:text="@string/sign_up"
             android:textSize="16sp"
+            android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/termsCheckBox" />
+            app:layout_constraintTop_toBottomOf="@id/confirmPasswordEditText" />
 
-        <!-- Container for "Already a member?" and "Sign In" -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -198,7 +174,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="@dimen/space16">
 
-            <!-- Already a member? -->
             <TextView
                 android:id="@+id/already_member"
                 android:layout_width="wrap_content"
@@ -208,7 +183,6 @@
                 android:textColor="@color/text"
                 android:fontFamily="@font/poppins_bold"/>
 
-            <!-- Sign In -->
             <TextView
                 android:id="@+id/signInTextView"
                 android:layout_width="wrap_content"
