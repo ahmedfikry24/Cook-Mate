@@ -57,7 +57,7 @@ class SearchFragment : Fragment() {
             searchView.isIconified = false // Open up the search bar when clicked
             viewModel.onSearchViewClicked(searchView.query.toString()) // Forward click handling to ViewModel
         }
-
+// test
         searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let { viewModel.onSearchViewClicked(it) } // Forward to ViewModel
