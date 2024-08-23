@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.search.SearchFragment"
-    android:background="@drawable/custom_gradient">
+    android:background="@color/background"
+    tools:context=".ui.search.SearchFragment">
 
-    <!-- Main Title -->
     <TextView
         android:id="@+id/searchTitle"
         android:layout_width="wrap_content"
@@ -22,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Search Bar -->
+
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="349dp"
@@ -30,14 +28,13 @@
         android:layout_margin="16dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/custom_input_field"
-        android:focusable="true"
         android:clickable="true"
+        android:focusable="true"
         android:queryHint="Search recipe"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/searchTitle" />
 
-    <!-- Search Results Title -->
     <TextView
         android:id="@+id/searchResultsTitle"
         android:layout_width="wrap_content"
@@ -52,7 +49,6 @@
         app:layout_constraintStart_toStartOf="@+id/searchView"
         app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
-    <!-- RecyclerView for Search Results -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recipesRecyclerView"
         android:layout_width="0dp"
