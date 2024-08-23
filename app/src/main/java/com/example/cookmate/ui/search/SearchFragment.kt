@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookmate.R
 import com.example.cookmate.ui.base.BaseFragment
 import com.example.cookmate.ui.search.adapter.SearchAdapter
+import com.example.cookmate.ui.search.view_model.SearchEvents
 import com.example.cookmate.ui.search.view_model.SearchViewModel
 
 class SearchFragment : BaseFragment<SearchViewModel>() {
@@ -36,36 +36,37 @@ class SearchFragment : BaseFragment<SearchViewModel>() {
     override fun viewModelObservers() {
         viewModel.recipes.observe(viewLifecycleOwner) { recipes ->
             searchAdapter.updateResult(recipes)
-            if (recipes.isEmpty()) {
-                viewModel.notifyUser("No recipes found")
-            }
         }
-        viewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
-            errorMessage?.let {
-                viewModel.notifyUser(it)
+        viewModel.events.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                SearchEvents.Idle -> Unit
+                SearchEvents.FetchingDataError -> showToast("Error fetching data")
+                SearchEvents.NoResultMatch -> showToast("no result matches")
+                is SearchEvents.OnClickItem -> {
+                    navController.navigate(
+                        SearchFragmentDirections.actionSearchFragmentToRecipeDetailsFragment(
+                            event.id
+                        )
+                    )
+                }
             }
-        }
-        viewModel.uiEvent.observe(viewLifecycleOwner) { event ->
-            event?.let {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-                viewModel.clearUiEvent()
-            }
+            viewModel.resetEventsToInitialState()
         }
     }
 
     private fun initListeners() {
-        searchView.setOnClickListener {
-            searchView.isIconified = false
-            viewModel.onSearchViewClicked(searchView.query.toString())
-        }
-
+        searchView.setOnClickListener { searchView.isIconified = false }
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                query?.let { viewModel.onSearchViewClicked(it) }
+                query?.let { if (it.isNotBlank()) viewModel.searchRecipes(it) }
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean = false
         })
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }
