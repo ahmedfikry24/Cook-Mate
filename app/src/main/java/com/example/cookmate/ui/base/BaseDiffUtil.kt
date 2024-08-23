@@ -1,8 +1,8 @@
-package com.example.cookmate.ui.home.adapters
+package com.example.cookmate.ui.base
 
 import androidx.recyclerview.widget.DiffUtil
 
-class MainDiffUtil<T>(
+class BaseDiffUtil<T>(
     private val oldItems: List<T>,
     private val newItems: List<T>,
     private val areItemsTheSame: (oldItem: T, newItem: T) -> Boolean,
