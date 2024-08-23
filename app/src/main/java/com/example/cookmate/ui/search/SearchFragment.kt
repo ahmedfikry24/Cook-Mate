@@ -9,21 +9,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookmate.R
 import com.example.cookmate.ui.base.BaseFragment
+import com.example.cookmate.ui.search.adapter.SearchAdapter
+import com.example.cookmate.ui.search.view_model.SearchViewModel
 
 class SearchFragment : BaseFragment<SearchViewModel>() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchView: SearchView
+    private lateinit var searchAdapter: SearchAdapter
 
     override val fragmentId = R.layout.fragment_search
-
-    private val recipeAdapter by lazy {
-        RecipeAdapter { recipeId ->
-            val action =
-                SearchFragmentDirections.actionSearchFragmentToRecipeDetailsFragment(recipeId)
-            findNavController().navigate(action)
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,12 +29,13 @@ class SearchFragment : BaseFragment<SearchViewModel>() {
         recyclerView = view.findViewById(R.id.recipesRecyclerView)
         searchView = view.findViewById(R.id.searchView)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-        recyclerView.adapter = recipeAdapter
+        searchAdapter = SearchAdapter(listOf(), viewModel)
+        recyclerView.adapter = searchAdapter
     }
 
     override fun viewModelObservers() {
         viewModel.recipes.observe(viewLifecycleOwner) { recipes ->
-            recipeAdapter.updateData(recipes)
+            searchAdapter.updateResult(recipes)
             if (recipes.isEmpty()) {
                 viewModel.notifyUser("No recipes found")
             }
