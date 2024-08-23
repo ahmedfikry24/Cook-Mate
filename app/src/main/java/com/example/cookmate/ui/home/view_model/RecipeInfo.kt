@@ -16,7 +16,7 @@ fun MealDto.Recipe.toUiState(): RecipeInfo {
         id = this.id ?: "",
         name = this.name ?: "",
         url = this.imageUrl ?: "",
-        area = this.strArea ?: "",
+        area = this.area ?: "",
         category = this.category ?: ""
     )
 }
