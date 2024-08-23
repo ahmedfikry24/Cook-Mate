@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.cookmate.R
+import com.example.cookmate.ui.base.BaseDiffUtil
 import com.example.cookmate.ui.favourite.view_model.FavoriteRecipeInfo
 
 class FavoriteAdapter(
@@ -42,7 +43,14 @@ class FavoriteAdapter(
     }
 
     fun updateRecipes(newItems: List<FavoriteRecipeInfo>) {
-        val diffUtil = DiffUtil.calculateDiff(FavoriteDiffUtil(recipes, newItems))
+        val diffUtil = DiffUtil.calculateDiff(
+            BaseDiffUtil(
+                recipes,
+                newItems,
+                areItemsTheSame = { oldItem, newItem -> oldItem.id == newItem.id },
+                areContentsTheSame = { oldItem, newItem -> oldItem == newItem }
+            )
+        )
         recipes = newItems
         diffUtil.dispatchUpdatesTo(this)
     }
