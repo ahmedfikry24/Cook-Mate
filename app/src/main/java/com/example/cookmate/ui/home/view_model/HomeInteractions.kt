@@ -5,4 +5,5 @@ interface HomeInteractions {
     fun onClickCategory(name: String)
     fun onClickRecipe(id: String)
     fun onClickFavoriteMore()
+    fun resetEventToInitialState()
 }

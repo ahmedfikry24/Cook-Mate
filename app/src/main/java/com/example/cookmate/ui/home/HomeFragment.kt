@@ -58,7 +58,7 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
 
                 HomeEvents.OnCLickFavoriteMore -> navController.navigate(R.id.favouriteFragment)
             }
-            viewModel.events.postValue(HomeEvents.Idle)
+            viewModel.resetEventToInitialState()
         }
     }
 }
