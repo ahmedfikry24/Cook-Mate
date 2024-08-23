@@ -15,13 +15,13 @@ import com.example.cookmate.R
 import com.example.cookmate.ui.base.BaseDiffUtil
 import com.example.cookmate.ui.home.view_model.CategoryInfo
 import com.example.cookmate.ui.home.view_model.HomeInteractions
-import com.example.cookmate.ui.home.view_model.RecipeInfo
+import com.example.cookmate.ui.shared_ui_state.RecipeUiState
 import com.example.cookmate.ui.utils.loadImageUrl
 import com.google.android.material.tabs.TabLayout
 
 class HomeMainAdapter(
     private var categories: List<CategoryInfo>,
-    private var recipesOfDay: List<RecipeInfo>,
+    private var recipesOfDay: List<RecipeUiState>,
     private val interactions: HomeInteractions,
 ) : RecyclerView.Adapter<HomeMainAdapter.MainViewHolder>() {
 
@@ -134,7 +134,7 @@ class HomeMainAdapter(
         if (recipesOfDay.isNotEmpty())
             holder.apply {
                 val item = recipesOfDay.first()
-                image.loadImageUrl(item.url)
+                image.loadImageUrl(item.imageUrl)
                 title.text = item.name
                 area.text = item.area
                 category.text = item.category
@@ -142,7 +142,7 @@ class HomeMainAdapter(
             }
     }
 
-    fun updateRecipesOfDay(newItems: List<RecipeInfo>) {
+    fun updateRecipesOfDay(newItems: List<RecipeUiState>) {
         val diffUtil = DiffUtil.calculateDiff(
             BaseDiffUtil(
                 recipesOfDay,

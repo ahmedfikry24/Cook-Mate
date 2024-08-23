@@ -4,6 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cookmate.data.repository.Repository
+import com.example.cookmate.ui.shared_ui_state.RecipeUiState
+import com.example.cookmate.ui.shared_ui_state.toUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -12,9 +14,9 @@ class HomeViewModel(
 ) : ViewModel(), HomeInteractions {
 
     val categories = MutableLiveData<List<CategoryInfo>>(listOf())
-    val categoriesRecipes = MutableLiveData<List<RecipeInfo>>(listOf())
-    val recipesOfDay = MutableLiveData<List<RecipeInfo>>(listOf())
-    val favoriteRecipes = MutableLiveData<List<RecipeInfo>>(listOf())
+    val categoriesRecipes = MutableLiveData<List<RecipeUiState>>(listOf())
+    val recipesOfDay = MutableLiveData<List<RecipeUiState>>(listOf())
+    val favoriteRecipes = MutableLiveData<List<RecipeUiState>>(listOf())
     val events = MutableLiveData<HomeEvents>(HomeEvents.Idle)
 
 
@@ -31,7 +33,7 @@ class HomeViewModel(
         }
     }
 
-    fun getMealsByCategory(name: String) {
+    private fun getRecipesByCategory(name: String) {
         viewModelScope.launch((Dispatchers.IO)) {
             val result = repository.getMealsByCategoryName(name)
             categoriesRecipes.postValue(result.map { it.toUiState() })
@@ -54,7 +56,7 @@ class HomeViewModel(
     }
 
     override fun onClickCategory(name: String) {
-        getMealsByCategory(name)
+        getRecipesByCategory(name)
     }
 
     override fun onClickRecipe(id: String) {
