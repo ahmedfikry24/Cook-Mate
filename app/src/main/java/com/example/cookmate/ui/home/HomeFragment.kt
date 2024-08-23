@@ -18,6 +18,7 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
     private lateinit var progressBar: ProgressBar
 
     override val fragmentId = R.layout.fragment_home
+    override val viewModelClass = HomeViewModel::class.java
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

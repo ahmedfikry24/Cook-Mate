@@ -20,6 +20,7 @@ class LoginFragment : BaseFragment<LoginViewModel>() {
     private lateinit var signUpTextView: TextView
 
     override val fragmentId = R.layout.fragment_login
+    override val viewModelClass = LoginViewModel::class.java
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

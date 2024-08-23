@@ -31,9 +31,10 @@ class RecipeDetailsFragment : BaseFragment<RecipeDetailsViewModel>() {
     private lateinit var playVideoIcon: AppCompatImageView
     private lateinit var mainContent: LinearLayout
     private lateinit var webView: WebView
-
     private val args: RecipeDetailsFragmentArgs by navArgs()
+
     override val fragmentId = R.layout.fragment_recipe_details
+    override val viewModelClass = RecipeDetailsViewModel::class.java
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

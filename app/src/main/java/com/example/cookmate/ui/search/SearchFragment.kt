@@ -19,6 +19,7 @@ class SearchFragment : BaseFragment<SearchViewModel>() {
     private lateinit var searchAdapter: SearchAdapter
 
     override val fragmentId = R.layout.fragment_search
+    override val viewModelClass = SearchViewModel::class.java
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

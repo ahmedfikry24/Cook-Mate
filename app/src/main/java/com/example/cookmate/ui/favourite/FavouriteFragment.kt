@@ -15,6 +15,7 @@ class FavouriteFragment : BaseFragment<FavoriteViewModel>() {
     private lateinit var favoriteAdapter: FavoriteAdapter
 
     override val fragmentId = R.layout.fragment_favourite
+    override val viewModelClass = FavoriteViewModel::class.java
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
