@@ -45,7 +45,5 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
         _uiEvent.value = null
     }
 
-    fun clearErrorMessage() {
-        _errorMessage.value = null
-    }
+
 }
