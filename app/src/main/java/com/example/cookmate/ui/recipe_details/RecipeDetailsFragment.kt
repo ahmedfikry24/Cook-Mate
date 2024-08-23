@@ -65,13 +65,8 @@ class RecipeDetailsFragment : BaseFragment<RecipeDetailsViewModel>() {
             image.loadImageUrl(it.imageUrl)
             name.text = it.name
             instructions.text = it.instructions
-            if (it.isFavorite)
-                favoriteIcon.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_favorite
-                    )
-                )
+            if (it.isFavorite) setFavoriteIconDrawable(R.drawable.ic_favorite)
+
             for (tag in it.tags) {
                 if (tag.isNotBlank()) {
                     val textView = TextView(requireContext()).apply {
@@ -82,15 +77,10 @@ class RecipeDetailsFragment : BaseFragment<RecipeDetailsViewModel>() {
                         gravity = Gravity.CENTER
                         background = ContextCompat.getDrawable(context, R.drawable.ingredient_shape)
                     }
-
                     val layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
-                    ).apply {
-
-                        setMargins(8, 0, 8, 0)
-                    }
-
+                    ).apply { setMargins(8, 0, 8, 0) }
                     tags.addView(textView, layoutParams)
                 }
             }
@@ -120,21 +110,8 @@ class RecipeDetailsFragment : BaseFragment<RecipeDetailsViewModel>() {
             webView.loadUrl(viewModel.recipe.value?.videoUrl ?: "")
         }
         favoriteIcon.setOnClickListener {
-            if (viewModel.isFavorite) {
-                favoriteIcon.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_unfavorite
-                    )
-                )
-            } else {
-                favoriteIcon.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_favorite
-                    )
-                )
-            }
+            if (viewModel.isFavorite) setFavoriteIconDrawable(R.drawable.ic_unfavorite)
+            else setFavoriteIconDrawable(R.drawable.ic_favorite)
             viewModel.onClickFavorite()
         }
 
@@ -153,6 +130,10 @@ class RecipeDetailsFragment : BaseFragment<RecipeDetailsViewModel>() {
                 }
             }
         )
+    }
+
+    private fun setFavoriteIconDrawable(drawableId: Int) {
+        favoriteIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), drawableId))
     }
 
 }
