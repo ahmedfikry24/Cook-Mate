@@ -7,14 +7,14 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookmate.R
 import com.example.cookmate.ui.base.BaseFragment
-import com.example.cookmate.ui.home.adapters.MainAdapter
+import com.example.cookmate.ui.home.adapters.HomeMainAdapter
 import com.example.cookmate.ui.home.view_model.HomeEvents
 import com.example.cookmate.ui.home.view_model.HomeViewModel
 
 class HomeFragment : BaseFragment<HomeViewModel>() {
 
     private lateinit var mainRecycler: RecyclerView
-    private lateinit var mainAdapter: MainAdapter
+    private lateinit var mainAdapter: HomeMainAdapter
     private lateinit var progressBar: ProgressBar
 
     override val fragmentId = R.layout.fragment_home
@@ -26,7 +26,7 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
 
     override fun initViews(view: View) {
         mainRecycler = view.findViewById(R.id.main_recycler)
-        mainAdapter = MainAdapter(listOf(), listOf(), viewModel)
+        mainAdapter = HomeMainAdapter(listOf(), listOf(), viewModel)
         mainRecycler.adapter = mainAdapter
         progressBar = view.findViewById(R.id.home_progress_bar)
     }

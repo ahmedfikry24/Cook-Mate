@@ -9,13 +9,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.cookmate.R
+import com.example.cookmate.ui.base.BaseDiffUtil
 import com.example.cookmate.ui.home.view_model.HomeInteractions
 import com.example.cookmate.ui.home.view_model.RecipeInfo
 import com.example.cookmate.ui.utils.loadImageUrl
 
 class HomeFavoriteAdapter(
     var recipes: List<RecipeInfo>,
-    private val interactions: HomeInteractions
+    private val interactions: HomeInteractions,
 ) : RecyclerView.Adapter<HomeFavoriteAdapter.HomeFavoriteViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeFavoriteViewHolder {
@@ -38,7 +39,7 @@ class HomeFavoriteAdapter(
 
     fun updateRecipes(newItems: List<RecipeInfo>) {
         val diffUtil = DiffUtil.calculateDiff(
-            MainDiffUtil(
+            BaseDiffUtil(
                 recipes,
                 newItems,
                 areItemsTheSame = { oldItem, newItem -> oldItem.id == newItem.id },

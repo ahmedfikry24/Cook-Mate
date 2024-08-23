@@ -12,17 +12,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.cookmate.R
+import com.example.cookmate.ui.base.BaseDiffUtil
 import com.example.cookmate.ui.home.view_model.CategoryInfo
 import com.example.cookmate.ui.home.view_model.HomeInteractions
 import com.example.cookmate.ui.home.view_model.RecipeInfo
 import com.example.cookmate.ui.utils.loadImageUrl
 import com.google.android.material.tabs.TabLayout
 
-class MainAdapter(
+class HomeMainAdapter(
     private var categories: List<CategoryInfo>,
     private var recipesOfDay: List<RecipeInfo>,
     private val interactions: HomeInteractions,
-) : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
+) : RecyclerView.Adapter<HomeMainAdapter.MainViewHolder>() {
 
     val recipesAdapter = HomeRecipesAdapter(listOf(), interactions)
     val favoriteAdapter = HomeFavoriteAdapter(listOf(), interactions)
@@ -75,35 +76,19 @@ class MainAdapter(
                 val tabText = customView.findViewById<TextView>(R.id.tab_text)
                 tabText.text = category.name
                 tab.customView = customView
-                tab.customView?.let {
-                    it.setBackgroundResource(R.drawable.unselected_tab_shape)
-                    val text = it.findViewById<TextView>(R.id.tab_text)
-                    text.setTextColor(text.context.getColor(R.color.primary))
-                }
+                tab.setUnSelectedTabView()
                 tabLayout.addTab(tab)
             }
-            tabLayout.getTabAt(0)?.customView?.let {
-                it.setBackgroundResource(R.drawable.selected_tab_shape)
-                val text = it.findViewById<TextView>(R.id.tab_text)
-                text.setTextColor(text.context.getColor(R.color.background))
-            }
+            tabLayout.getTabAt(0)?.setSelectedTabView()
 
             tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
-                    tab?.customView?.let {
-                        it.setBackgroundResource(R.drawable.selected_tab_shape)
-                        val text = it.findViewById<TextView>(R.id.tab_text)
-                        text.setTextColor(text.context.getColor(R.color.background))
-                    }
+                    tab?.setSelectedTabView()
                     interactions.onClickCategory(categories[tab?.position ?: 0].name)
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {
-                    tab?.customView?.let {
-                        it.setBackgroundResource(R.drawable.unselected_tab_shape)
-                        val text = it.findViewById<TextView>(R.id.tab_text)
-                        text.setTextColor(text.context.getColor(R.color.primary))
-                    }
+                    tab?.setUnSelectedTabView()
                 }
 
                 override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -111,9 +96,25 @@ class MainAdapter(
         }
     }
 
+    private fun TabLayout.Tab.setSelectedTabView() {
+        customView?.let {
+            it.setBackgroundResource(R.drawable.selected_tab_shape)
+            val text = it.findViewById<TextView>(R.id.tab_text)
+            text.setTextColor(text.context.getColor(R.color.background))
+        }
+    }
+
+    private fun TabLayout.Tab.setUnSelectedTabView() {
+        customView?.let {
+            it.setBackgroundResource(R.drawable.unselected_tab_shape)
+            val text = it.findViewById<TextView>(R.id.tab_text)
+            text.setTextColor(text.context.getColor(R.color.primary))
+        }
+    }
+
     fun updateCategories(newItems: List<CategoryInfo>) {
         val diffUtil = DiffUtil.calculateDiff(
-            MainDiffUtil(
+            BaseDiffUtil(
                 categories,
                 newItems,
                 areItemsTheSame = { oldItem, newItem -> oldItem.id == newItem.id },
@@ -143,7 +144,7 @@ class MainAdapter(
 
     fun updateRecipesOfDay(newItems: List<RecipeInfo>) {
         val diffUtil = DiffUtil.calculateDiff(
-            MainDiffUtil(
+            BaseDiffUtil(
                 recipesOfDay,
                 newItems,
                 areItemsTheSame = { oldItem, newItem -> oldItem.id == newItem.id },
