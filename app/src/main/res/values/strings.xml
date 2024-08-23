@@ -23,4 +23,6 @@
    <string name="recipe_details">Recipe Details</string>
     <string name="instructions">Instructions</string>
     <string name="ingredients">Ingredients</string>
+    <string name="search_recipes">Search Recipes</string>
+    <string name="search_result">Search Result</string>
 </resources>
