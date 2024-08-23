@@ -18,8 +18,11 @@
     <string name="password">Password</string>
     <string name="enter_password">Enter password</string>
     <string name="sign_in">Sign In</string>
-    <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign up</string>
-    <string name="recipe_details">Recipe Details</string>
+     <string name="don_t_have_an_account_sign_up">Don\'t have an account?</string>
+    <string name="sign_up">Sign Up</string>
+   <string name="recipe_details">Recipe Details</string>
     <string name="instructions">Instructions</string>
     <string name="ingredients">Ingredients</string>
+    <string name="search_recipes">Search Recipes</string>
+    <string name="search_result">Search Result</string>
 </resources>
