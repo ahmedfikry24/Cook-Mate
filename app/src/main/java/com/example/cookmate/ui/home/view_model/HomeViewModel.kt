@@ -54,7 +54,7 @@ class HomeViewModel(
     }
 
     override fun onClickCategory(name: String) {
-        viewModelScope.launch { events.postValue(HomeEvents.OnClickCategory(name)) }
+        getMealsByCategory(name)
     }
 
     override fun onClickRecipe(id: String) {

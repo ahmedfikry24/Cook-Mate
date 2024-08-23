@@ -50,7 +50,6 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
         viewModel.events.observe(viewLifecycleOwner) { event ->
             when (event) {
                 HomeEvents.Idle -> Unit
-                is HomeEvents.OnClickCategory -> viewModel.getMealsByCategory(event.name)
                 is HomeEvents.OnClickMeal -> {
                     val direction =
                         HomeFragmentDirections.actionHomeFragmentToRecipeDetailsFragment(event.id)
