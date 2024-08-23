@@ -1,8 +1,9 @@
-package com.example.cookmate.ui.recipe_details.view_model
+package com.example.cookmate.ui.shared_ui_state
 
+import com.example.cookmate.data.local.entity.FavouriteRecipeEntity
 import com.example.cookmate.data.model.MealDto
 
-data class RecipeDetails(
+data class RecipeUiState(
     val id: String = "",
     val name: String = "",
     val instructions: String = "",
@@ -15,8 +16,8 @@ data class RecipeDetails(
     val isFavorite: Boolean = false,
 )
 
-fun MealDto.Recipe.toUiState(isFavorite: Boolean): RecipeDetails {
-    return RecipeDetails(
+fun MealDto.Recipe.toUiState(isFavorite: Boolean = false): RecipeUiState {
+    return RecipeUiState(
         id = this.id ?: "",
         name = this.name ?: "",
         instructions = this.instructions ?: "",
@@ -29,6 +30,25 @@ fun MealDto.Recipe.toUiState(isFavorite: Boolean): RecipeDetails {
         isFavorite = isFavorite
     )
 }
+
+fun FavouriteRecipeEntity.toUiState(): RecipeUiState {
+    return RecipeUiState(
+        id = this.id,
+        name = this.name,
+        imageUrl = this.imageUrl
+    )
+}
+
+fun RecipeUiState.toEntity(): FavouriteRecipeEntity {
+    return FavouriteRecipeEntity(
+        id = this.id,
+        name = this.name,
+        imageUrl = this.imageUrl,
+        type = this.category,
+        area = this.area
+    )
+}
+
 
 private fun getTagsList(tag: String): List<String> {
     return tag.split(",").map { it.trim() }

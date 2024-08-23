@@ -10,10 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.cookmate.R
-import com.example.cookmate.ui.favourite.view_model.FavoriteRecipeInfo
+import com.example.cookmate.ui.base.BaseDiffUtil
+import com.example.cookmate.ui.favourite.view_model.FavoriteInteractions
+import com.example.cookmate.ui.shared_ui_state.RecipeUiState
 
 class FavoriteAdapter(
-    private var recipes: List<FavoriteRecipeInfo>,
+    private var recipes: List<RecipeUiState>,
+    private val interactions: FavoriteInteractions,
 ) : RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
@@ -28,12 +31,12 @@ class FavoriteAdapter(
     override fun onBindViewHolder(holder: FavoriteViewHolder, position: Int) {
         val item = recipes[position]
         holder.apply {
-            image.loadUrl(item.url)
+            image.loadUrl(item.imageUrl)
             title.text = item.name
             area.text = item.area
             category.text = item.category
-            icon.setOnClickListener { item.onClickFavorite(item.id) }
-            image.setOnClickListener { item.onClickItem(item.id) }
+            icon.setOnClickListener { interactions.removeFavoriteRecipe(item.id) }
+            image.setOnClickListener { interactions.onClickItem(item.id) }
         }
     }
 
@@ -41,8 +44,15 @@ class FavoriteAdapter(
         Glide.with(this).load(url).into(this)
     }
 
-    fun updateRecipes(newItems: List<FavoriteRecipeInfo>) {
-        val diffUtil = DiffUtil.calculateDiff(FavoriteDiffUtil(recipes, newItems))
+    fun updateRecipes(newItems: List<RecipeUiState>) {
+        val diffUtil = DiffUtil.calculateDiff(
+            BaseDiffUtil(
+                recipes,
+                newItems,
+                areItemsTheSame = { oldItem, newItem -> oldItem.id == newItem.id },
+                areContentsTheSame = { oldItem, newItem -> oldItem == newItem }
+            )
+        )
         recipes = newItems
         diffUtil.dispatchUpdatesTo(this)
     }

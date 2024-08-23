@@ -1,11 +1,11 @@
 package com.example.cookmate.ui.home.adapters
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.cookmate.ui.home.view_model.RecipeInfo
+import com.example.cookmate.ui.shared_ui_state.RecipeUiState
 
 class HomeRecipeDiffUtil(
-    private val oldItems: List<RecipeInfo>,
-    private val newItems: List<RecipeInfo>,
+    private val oldItems: List<RecipeUiState>,
+    private val newItems: List<RecipeUiState>,
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize() = oldItems.size
