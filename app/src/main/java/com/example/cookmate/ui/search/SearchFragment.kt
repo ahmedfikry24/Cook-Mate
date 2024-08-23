@@ -23,8 +23,8 @@ class SearchFragment : Fragment() {
     private lateinit var searchView: androidx.appcompat.widget.SearchView
 
     private val remoteDataSource by lazy { RemoteDataSourceImpl(RetrofitManager.service) }
-    private val localDataSource by lazy { LocalDataSourceImpl(RoomManager.getInit(requireContext())) } // Adding LocalDataSource
-    private val repository by lazy { RepositoryImpl(remoteDataSource, localDataSource) } // Using both sources here
+    private val localDataSource by lazy { LocalDataSourceImpl(RoomManager.getInit(requireContext())) }
+    private val repository by lazy { RepositoryImpl(remoteDataSource, localDataSource) }
     private val viewModel by viewModels<SearchViewModel> { SearchViewModelFactory(repository) }
 
     private val recipeAdapter by lazy { RecipeAdapter { recipeId ->
@@ -52,11 +52,15 @@ class SearchFragment : Fragment() {
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         recyclerView.adapter = recipeAdapter
 
+        // Ensure the whole search bar is clickable
+        searchView.setOnClickListener {
+            searchView.isIconified = false // Open up the search bar when clicked
+            viewModel.onSearchViewClicked(searchView.query.toString()) // Forward click handling to ViewModel
+        }
+
         searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if (!query.isNullOrEmpty()) {
-                    viewModel.searchRecipes(query)
-                }
+                query?.let { viewModel.onSearchViewClicked(it) } // Forward to ViewModel
                 return true
             }
 
@@ -68,14 +72,21 @@ class SearchFragment : Fragment() {
         viewModel.recipes.observe(viewLifecycleOwner) { recipes ->
             recipeAdapter.updateData(recipes)
             if (recipes.isEmpty()) {
-                Toast.makeText(requireContext(), "No recipes found", Toast.LENGTH_SHORT).show()
+                viewModel.notifyUser("No recipes found") // Notify using ViewModel
             }
         }
 
         viewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
             errorMessage?.let {
+                viewModel.notifyUser(it)
+            }
+        }
+
+        // Observe UI events like showing a Toast
+        viewModel.uiEvent.observe(viewLifecycleOwner) { event ->
+            event?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-                viewModel.clearErrorMessage()
+                viewModel.clearUiEvent() // Clear event after showing it
             }
         }
     }
