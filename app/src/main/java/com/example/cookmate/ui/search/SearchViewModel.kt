@@ -17,6 +17,15 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> = _errorMessage
 
+    private val _uiEvent = MutableLiveData<String?>()
+    val uiEvent: LiveData<String?> = _uiEvent
+
+    fun onSearchViewClicked(query: String) {
+        if (query.isNotEmpty()) {
+            searchRecipes(query)
+        }
+    }
+
     fun searchRecipes(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -26,6 +35,14 @@ class SearchViewModel(private val repository: Repository) : ViewModel() {
                 _errorMessage.postValue("Error fetching data")
             }
         }
+    }
+
+    fun notifyUser(message: String) {
+        _uiEvent.value = message
+    }
+
+    fun clearUiEvent() {
+        _uiEvent.value = null
     }
 
     fun clearErrorMessage() {
