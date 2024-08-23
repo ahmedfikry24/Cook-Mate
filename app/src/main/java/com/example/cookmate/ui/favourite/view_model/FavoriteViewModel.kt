@@ -3,7 +3,6 @@ package com.example.cookmate.ui.favourite.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.cookmate.data.repository.Repository
 import com.example.cookmate.ui.shared_ui_state.RecipeUiState
@@ -13,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class FavoriteViewModel(
     private val repository: Repository,
-) : ViewModel() {
+) : ViewModel(), FavoriteInteractions {
 
     private val _favoriteRecipes = MutableLiveData<List<RecipeUiState>>(listOf())
     val favoriteRecipes: LiveData<List<RecipeUiState>> = _favoriteRecipes
@@ -29,12 +28,20 @@ class FavoriteViewModel(
     }
 
 
-    fun removeFavoriteRecipe(id: String) {
+    override fun removeFavoriteRecipe(id: String) {
         viewModelScope.launch(Dispatchers.Default) {
             repository.removeFavouriteRecipe(id)
             _favoriteRecipes.postValue(
                 favoriteRecipes.value?.toMutableList()?.filterNot { it.id == id }
             )
         }
+    }
+
+    override fun onClickItem(id: String) {
+        _events.postValue(FavoriteEvents.OnClickItem(id))
+    }
+
+    override fun resetEventsToInitialState() {
+        _events.postValue(FavoriteEvents.Idle)
     }
 }

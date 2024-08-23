@@ -23,7 +23,7 @@ class FavouriteFragment : BaseFragment<FavoriteViewModel>() {
 
     override fun initViews(view: View) {
         recycler = view.findViewById(R.id.favorite_recycler)
-        favoriteAdapter = FavoriteAdapter(listOf())
+        favoriteAdapter = FavoriteAdapter(listOf(), viewModel)
         recycler.adapter = favoriteAdapter
     }
 
@@ -34,7 +34,6 @@ class FavouriteFragment : BaseFragment<FavoriteViewModel>() {
         viewModel.events.observe(viewLifecycleOwner) { event ->
             when (event) {
                 FavoriteEvents.Idle -> Unit
-                is FavoriteEvents.OnClickFavorite -> viewModel.removeFavoriteRecipe(event.id)
                 is FavoriteEvents.OnClickItem -> {
                     val direction =
                         FavouriteFragmentDirections.actionFavouriteFragmentToRecipeDetailsFragment(
@@ -43,7 +42,7 @@ class FavouriteFragment : BaseFragment<FavoriteViewModel>() {
                     navController.navigate(direction)
                 }
             }
-            viewModel.events.postValue(FavoriteEvents.Idle)
+            viewModel.resetEventsToInitialState()
         }
     }
 }
