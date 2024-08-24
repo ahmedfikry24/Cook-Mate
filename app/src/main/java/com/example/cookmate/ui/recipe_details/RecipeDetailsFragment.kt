@@ -46,6 +46,7 @@ class RecipeDetailsFragment : BaseFragment<RecipeDetailsViewModel>() {
         super.onResume()
         val recipeActivity = activity as RecipeActivity
         recipeActivity.controlNavDrawerVisibility(false)
+        recipeActivity.controlBottomNavVisibility(false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

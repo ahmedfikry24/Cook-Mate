@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -30,6 +31,7 @@ import com.google.android.material.navigation.NavigationView
 class RecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var navHost: NavHostFragment
     private lateinit var navController: NavController
+    private lateinit var bottomNav: BottomNavigationView
     private lateinit var toolbar: Toolbar
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -76,6 +78,7 @@ class RecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         navHost =
             supportFragmentManager.findFragmentById(R.id.user_main_container) as NavHostFragment
         navController = navHost.navController
+        bottomNav = findViewById(R.id.bottom_nav)
         drawerLayout = findViewById(R.id.drawer_layout)
         toolbar = findViewById(R.id.toolbar)
         appBarConfiguration =
@@ -93,8 +96,8 @@ class RecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
 
     private fun setupBottomNav() {
-        findViewById<BottomNavigationView>(R.id.bottom_nav).setupWithNavController(navController)
-        findViewById<BottomNavigationView>(R.id.bottom_nav).setOnItemSelectedListener { item ->
+        bottomNav.setupWithNavController(navController)
+        bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.homeFragment -> {
                     if (navController.currentDestination?.id != R.id.homeFragment) {
@@ -155,5 +158,9 @@ class RecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             actionBarToggle.isDrawerIndicatorEnabled = false
         }
         actionBarToggle.syncState()
+    }
+
+    fun controlBottomNavVisibility(isVisible: Boolean) {
+        bottomNav.isVisible = isVisible
     }
 }

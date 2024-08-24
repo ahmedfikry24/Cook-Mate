@@ -31,6 +31,7 @@ class SearchFragment : BaseFragment<SearchViewModel>() {
         super.onResume()
         val recipeActivity = activity as RecipeActivity
         recipeActivity.controlNavDrawerVisibility(true)
+        recipeActivity.controlBottomNavVisibility(true)
     }
 
     override fun initViews(view: View) {

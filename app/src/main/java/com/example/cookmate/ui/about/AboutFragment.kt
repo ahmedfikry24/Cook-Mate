@@ -21,5 +21,6 @@ class AboutFragment : Fragment() {
         super.onResume()
         val recipeActivity = activity as RecipeActivity
         recipeActivity.controlNavDrawerVisibility(false)
+        recipeActivity.controlBottomNavVisibility(false)
     }
 }
