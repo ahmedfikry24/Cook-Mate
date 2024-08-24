@@ -1,14 +1,172 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.register.RegisterFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    android:id="@+id/registerfragment"
+    android:background="@color/background">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="@dimen/space16"
+        android:layout_margin="@dimen/space16"
+        tools:context=".ui.register.RegisterFragment">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_an_account"
+            android:textSize="20sp"
+            android:textColor="@color/text"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:fontFamily="@font/poppins_bold"/>
+
+        <TextView
+            android:id="@+id/subtitleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/set_up_your_account"
+            android:textSize="11sp"
+            android:textColor="@color/light_text"
+            android:fontFamily="@font/poppins_regular"
+            app:layout_constraintTop_toBottomOf="@id/titleTextView"
+            app:layout_constraintStart_toStartOf="@id/titleTextView"
+            app:layout_constraintEnd_toEndOf="@id/titleTextView"
+            android:layout_marginTop="@dimen/space8"/>
+
+        <TextView
+            android:id="@+id/emailLabelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/user_name"
+            android:textSize="14sp"
+            android:textColor="@color/text"
+            android:layout_marginTop="@dimen/space16"
+            android:fontFamily="@font/poppins_regular"
+            app:layout_constraintTop_toBottomOf="@id/subtitleTextView"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/nameEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="@string/enter_user_name"
+            android:inputType="textEmailAddress"
+            android:layout_marginTop="@dimen/space8"
+            android:padding="18dp"
+            android:fontFamily="@font/poppins_regular"
+            android:background="@drawable/custom_input_field"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@id/emailLabelTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/passwordLabelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/password"
+            android:textSize="14sp"
+            android:textColor="@color/text"
+            android:layout_marginTop="@dimen/space12"
+            android:fontFamily="@font/poppins_regular"
+            app:layout_constraintTop_toBottomOf="@id/nameEditText"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="@string/enter_password"
+            android:inputType="textPassword"
+            android:layout_marginTop="@dimen/space8"
+            android:padding="18dp"
+            android:fontFamily="@font/poppins_regular"
+            android:background="@drawable/custom_input_field"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@id/passwordLabelTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/confirmPasswordLabelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm_password"
+            android:textSize="14sp"
+            android:textColor="@color/text"
+            android:layout_marginTop="@dimen/space12"
+            android:fontFamily="@font/poppins_regular"
+            app:layout_constraintTop_toBottomOf="@id/passwordEditText"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/confirmPasswordEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="@string/retype_password"
+            android:inputType="textPassword"
+            android:layout_marginTop="@dimen/space8"
+            android:padding="18dp"
+            android:fontFamily="@font/poppins_regular"
+            android:background="@drawable/custom_input_field"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@id/confirmPasswordLabelTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
+            android:background="@drawable/ripple_green_button"
+            android:id="@+id/signUpButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_bold"
+            android:padding="@dimen/space16"
+            android:text="@string/sign_up"
+            android:textSize="14sp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/confirmPasswordEditText" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/signUpButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/space16">
+
+            <TextView
+                android:id="@+id/already_member"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/already_a_member"
+                android:textSize="16sp"
+                android:textColor="@color/text"
+                android:fontFamily="@font/poppins_regular"/>
+
+            <TextView
+                android:id="@+id/signInTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_in"
+                android:textColor="@color/secondary"
+                android:textSize="16sp"
+                android:fontFamily="@font/poppins_regular"
+                android:layout_marginStart="@dimen/space4"/>
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
+
