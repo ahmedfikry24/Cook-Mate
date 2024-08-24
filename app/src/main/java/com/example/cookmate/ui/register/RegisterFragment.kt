@@ -5,19 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cookmate.R
-import com.example.cookmate.data.local.RoomManager
 import com.example.cookmate.data.local.entity.RegisterEntity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.cookmate.data.repository.Repository
 
 class RegisterFragment : Fragment() {
 
@@ -27,6 +23,12 @@ class RegisterFragment : Fragment() {
     private lateinit var confirmPasswordEditText: EditText
     private lateinit var signUpButton: Button
     private lateinit var signInTextView: TextView
+
+    private lateinit var repository: Repository
+
+    private val viewModel: RegisterViewModel by viewModels {
+        RegisterViewModelFactory(repository)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,7 +61,9 @@ class RegisterFragment : Fragment() {
         val confirmPassword = confirmPasswordEditText.text.toString().trim()
 
         if (validateInputs(name, email, password, confirmPassword)) {
-
+            viewModel.registerUser(RegisterEntity(id, name, email, password))
+            Toast.makeText(requireContext(), "User registered successfully", Toast.LENGTH_SHORT).show()
+            findNavController().popBackStack()
         } else {
             Toast.makeText(requireContext(), "Please fill the required fields", Toast.LENGTH_SHORT).show()
         }
