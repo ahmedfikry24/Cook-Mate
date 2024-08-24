@@ -33,4 +33,13 @@
     <string name="retype_password">retype password</string>
     <string name="user_name">User Name</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="about_our_recipe_app">About Our Recipe App</string>
+    <string name="Description"><![CDATA[Welcome to our Recipe App, your ultimate cooking companion! Our app is designed to make your culinary journey enjoyable and effortless. Whether you\'re a seasoned chef or a kitchen novice, our app offers everything you need to discover, create, and save delicious recipes.\n\n- Login & Register: Quickly create an account or log in to access personalized features.\n- Home: Explore a curated selection of popular and trending recipes.\n- Search: Find recipes that match your preferences using our powerful search feature.\n- Recipe Details: Dive into detailed instructions, ingredients, and tips for each recipe.\n- Favorites: Save your favorite recipes for easy access anytime.\n\nEnjoy cooking with our app, where inspiration meets simplicity!]]></string>
+    <string name="show_more">Show More</string>
+    <string name="team_member_image">Team Member Image</string>
+    <string name="ahmed_fikry">Ahmed Fikry</string>
+    <string name="linkedin">LinkedIn</string>
+    <string name="michael_mounir">Michael Mounir</string>
+    <string name="show_less">Show Less</string>
+    <string name="mostafa_mohamed">Mostafa Mohamed</string>
 </resources>
