@@ -28,6 +28,7 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
 
     override fun onResume() {
         super.onResume()
+        viewModel.getFavoriteRecipes()
         val recipeActivity = activity as RecipeActivity
         recipeActivity.controlNavDrawerVisibility(true)
         recipeActivity.controlBottomNavVisibility(true)

@@ -58,7 +58,7 @@ class HomeViewModel(
     }
 
 
-    private fun getFavoriteRecipes() {
+    fun getFavoriteRecipes() {
         viewModelScope.launch(Dispatchers.Default) {
             val result = repository.getAllFavouriteRecipes()
             _favoriteRecipes.postValue(result.map { it.toUiState() })
