@@ -72,5 +72,6 @@ dependencies {
 
     //thirdParty
     implementation(libs.glide)
+    implementation(libs.flow.layout)
 
 }

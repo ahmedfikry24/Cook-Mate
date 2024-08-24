@@ -1,18 +1,49 @@
 package com.example.cookmate.ui.favourite
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.example.cookmate.R
+import com.example.cookmate.ui.base.BaseFragment
+import com.example.cookmate.ui.favourite.adapter.FavoriteAdapter
+import com.example.cookmate.ui.favourite.view_model.FavoriteEvents
+import com.example.cookmate.ui.favourite.view_model.FavoriteViewModel
 
-class FavouriteFragment : Fragment() {
+class FavouriteFragment : BaseFragment<FavoriteViewModel>() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        return inflater.inflate(R.layout.fragment_favourite, container, false)
+    private lateinit var recycler: RecyclerView
+    private lateinit var favoriteAdapter: FavoriteAdapter
+
+    override val fragmentId = R.layout.fragment_favourite
+    override val viewModelClass = FavoriteViewModel::class.java
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.getFavoriteRecipes()
+    }
+
+    override fun initViews(view: View) {
+        recycler = view.findViewById(R.id.favorite_recycler)
+        favoriteAdapter = FavoriteAdapter(listOf(), viewModel)
+        recycler.adapter = favoriteAdapter
+    }
+
+    override fun viewModelObservers() {
+        viewModel.favoriteRecipes.observe(viewLifecycleOwner) { recipes ->
+            favoriteAdapter.updateRecipes(recipes)
+        }
+        viewModel.events.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                FavoriteEvents.Idle -> Unit
+                is FavoriteEvents.OnClickItem -> {
+                    val direction =
+                        FavouriteFragmentDirections.actionFavouriteFragmentToRecipeDetailsFragment(
+                            event.id
+                        )
+                    navController.navigate(direction)
+                }
+            }
+            viewModel.resetEventsToInitialState()
+        }
     }
 }

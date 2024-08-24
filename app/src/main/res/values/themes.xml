@@ -1,13 +1,18 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Base.Theme.CookMate" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="auth_activity" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary</item>
         <item name="android:colorSecondary">@color/secondary</item>
     </style>
 
-
-    <style name="Theme.CookMate" parent="Base.Theme.CookMate" />
+    <style name="recipe_activity" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary</item>
+        <item name="android:colorSecondary">@color/secondary</item>
+        <item name="android:statusBarColor">@color/primary</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
 
     <style name="customButton" parent="Widget.MaterialComponents.Button">
         <item name="android:background">@drawable/ripple_green_button</item>
