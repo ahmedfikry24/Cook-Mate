@@ -1,10 +1,12 @@
 package com.example.cookmate
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.WindowInsetsController
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -16,8 +18,15 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.example.cookmate.data.local.RoomManager
+import com.example.cookmate.data.local.shared_pref.SharedPrefManager
+import com.example.cookmate.data.remote.RetrofitManager
+import com.example.cookmate.data.repository.RepositoryImpl
+import com.example.cookmate.data.source.LocalDataSourceImpl
+import com.example.cookmate.data.source.RemoteDataSourceImpl
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.isActive
 
 class RecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var navHost: NavHostFragment
@@ -26,6 +35,15 @@ class RecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navigationView: NavigationView
+
+    private val remoteDataSource by lazy { RemoteDataSourceImpl(RetrofitManager.service) }
+    private val localDataSource by lazy { LocalDataSourceImpl(RoomManager.getInit(applicationContext)) }
+    private val repository by lazy { RepositoryImpl(remoteDataSource, localDataSource) }
+    private val viewModel: RecipeActivityViewModel by viewModels {
+        RecipeActivityViewModelFactory(
+            repository
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +54,7 @@ class RecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        RoomManager.getInit(applicationContext)
         setupThemeAppearance()
         initViews()
         setupBottomNav()
@@ -110,9 +129,19 @@ class RecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             }
 
             R.id.sign_out -> {
+                navigateToAuthActivity()
                 drawerLayout.closeDrawer(GravityCompat.START)
             }
         }
         return true
+    }
+
+    private fun navigateToAuthActivity() {
+        SharedPrefManager.isLogin = false
+        viewModel.clearFavorites()
+        val intent = Intent(this, AuthActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finishAffinity()
     }
 }
