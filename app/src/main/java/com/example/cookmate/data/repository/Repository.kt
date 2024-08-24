@@ -13,6 +13,7 @@ interface Repository {
     suspend fun addFavouriteRecipe(recipe: FavouriteRecipeEntity)
     suspend fun getAllFavouriteRecipes(): List<FavouriteRecipeEntity>
     suspend fun removeFavouriteRecipe(recipeId: String)
+    suspend fun clearFavourites()
 
     suspend fun recipeSearch(name: String): List<MealDto.Recipe>
     suspend fun getMealById(id: String): List<MealDto.Recipe>
