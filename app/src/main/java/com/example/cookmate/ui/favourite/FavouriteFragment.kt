@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookmate.R
+import com.example.cookmate.RecipeActivity
 import com.example.cookmate.ui.base.BaseFragment
 import com.example.cookmate.ui.favourite.adapter.FavoriteAdapter
 import com.example.cookmate.ui.favourite.view_model.FavoriteEvents
@@ -20,6 +21,12 @@ class FavouriteFragment : BaseFragment<FavoriteViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getFavoriteRecipes()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val recipeActivity = activity as RecipeActivity
+        recipeActivity.controlNavDrawerVisibility(true)
     }
 
     override fun initViews(view: View) {

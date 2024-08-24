@@ -26,7 +26,6 @@ import com.example.cookmate.data.source.LocalDataSourceImpl
 import com.example.cookmate.data.source.RemoteDataSourceImpl
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
-import kotlinx.coroutines.isActive
 
 class RecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var navHost: NavHostFragment
@@ -34,6 +33,7 @@ class RecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     private lateinit var toolbar: Toolbar
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var actionBarToggle: ActionBarDrawerToggle
     private lateinit var navigationView: NavigationView
 
     private val remoteDataSource by lazy { RemoteDataSourceImpl(RetrofitManager.service) }
@@ -84,11 +84,11 @@ class RecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
 
     private fun setupNavDrawer() {
-        val actionBarDrawerToggle =
+        actionBarToggle =
             ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.close, R.string.open)
-        drawerLayout.addDrawerListener(actionBarDrawerToggle)
-        actionBarDrawerToggle.syncState()
-        actionBarDrawerToggle.drawerArrowDrawable.color = getColor(R.color.background)
+        drawerLayout.addDrawerListener(actionBarToggle)
+        actionBarToggle.syncState()
+        actionBarToggle.drawerArrowDrawable.color = getColor(R.color.background)
         navigationView.setNavigationItemSelectedListener(this)
     }
 
@@ -126,11 +126,12 @@ class RecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         when (item.itemId) {
             R.id.aboutFragment -> {
                 drawerLayout.closeDrawer(GravityCompat.START)
+                navController.navigate(R.id.aboutFragment)
             }
 
             R.id.sign_out -> {
-                navigateToAuthActivity()
                 drawerLayout.closeDrawer(GravityCompat.START)
+                navigateToAuthActivity()
             }
         }
         return true
@@ -143,5 +144,16 @@ class RecipeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finishAffinity()
+    }
+
+    fun controlNavDrawerVisibility(isVisible: Boolean) {
+        if (isVisible) {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            actionBarToggle.isDrawerIndicatorEnabled = true
+        } else {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            actionBarToggle.isDrawerIndicatorEnabled = false
+        }
+        actionBarToggle.syncState()
     }
 }
