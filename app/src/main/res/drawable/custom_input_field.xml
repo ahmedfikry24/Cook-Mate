@@ -4,5 +4,6 @@
     <corners android:radius="8dp" />
     <stroke
         android:width="2dp"
-        android:color="@color/light_gray" /> <!-- Replace with your grey color resource -->
+        android:color="@color/light_gray" />
+    <padding android:left="@dimen/space8" />
 </shape>

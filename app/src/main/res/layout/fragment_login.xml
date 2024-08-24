@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.login.LoginFragment"
-    tools:ignore="ExtraText">
-
-    <!-- TODO: Update blank fragment layout -->
+    android:background="@color/background"
+    tools:context=".ui.login.LoginFragment">
 
 
     <TextView
@@ -40,105 +37,92 @@
         android:id="@+id/nameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginStart="@dimen/space16"
+        android:layout_marginTop="56dp"
         android:fontFamily="@font/poppins_regular"
         android:text="@string/name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/subtitleTextView" />
 
     <EditText
         android:id="@+id/nameInput"
-        android:layout_width="364dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="@dimen/space16"
+        android:layout_marginTop="@dimen/space12"
         android:background="@drawable/custom_input_field"
         android:fontFamily="@font/poppins_regular"
         android:hint="@string/enter_name"
         android:inputType="textPersonName"
-        android:padding="12dp"
+        android:paddingEnd="16dp"
         android:textColorHint="@color/light_gray"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameTextView"
-        app:layout_constraintWidth_percent="0.8" />
+        app:layout_constraintTop_toBottomOf="@id/nameTextView" />
 
     <TextView
         android:id="@+id/passwordTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="320dp"
+        android:layout_marginTop="@dimen/space16"
         android:fontFamily="@font/poppins_regular"
         android:text="@string/password"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/nameInput" />
 
     <EditText
         android:id="@+id/passwordInput"
-        android:layout_width="364dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginHorizontal="@dimen/space16"
         android:layout_marginTop="12dp"
         android:background="@drawable/custom_input_field"
         android:fontFamily="@font/poppins_regular"
         android:hint="@string/enter_password"
         android:inputType="textPassword"
-        android:padding="12dp"
         android:textColorHint="@color/light_gray"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/nameInput"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordTextView"
-        app:layout_constraintWidth_percent="0.8" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordTextView" />
 
     <Button
         android:id="@+id/signInButton"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space16"
+        android:layout_marginTop="56dp"
+        android:background="@drawable/ripple_green_button"
         android:fontFamily="@font/poppins_bold"
-        android:background="@drawable/green_button_background"
-        android:padding="12dp"
+        android:padding="@dimen/space16"
         android:text="@string/sign_in"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/passwordInput"
-        app:layout_constraintStart_toStartOf="@+id/passwordInput"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.685" />
+        android:textColor="@color/background"
+        app:layout_constraintTop_toBottomOf="@id/passwordInput" />
 
 
-    <TextView
-        android:id="@+id/dontHaveAnAccount"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="116dp"
-        android:fontFamily="@font/poppins_regular"
-        android:text="@string/don_t_have_an_account_sign_up"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="@dimen/space24"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.381"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/signInButton">
 
-    <TextView
-        android:id="@+id/signUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:fontFamily="@font/poppins_regular"
-        android:text="@string/sign_up"
-        android:textColor="@color/secondary"
-        android:textStyle="bold"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintBottom_toBottomOf="@+id/dontHaveAnAccount"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/dontHaveAnAccount"
-        app:layout_constraintTop_toTopOf="@+id/dontHaveAnAccount"
-        tools:ignore="MissingConstraints"
-         />
+        <TextView
+            android:id="@+id/dontHaveAnAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_regular"
+            android:text="@string/don_t_have_an_account_sign_up" />
 
+        <TextView
+            android:id="@+id/signUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:fontFamily="@font/poppins_regular"
+            android:text="@string/sign_up"
+            android:textColor="@color/secondary" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

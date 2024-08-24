@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:padding="@dimen/space16"
         android:layout_margin="@dimen/space16"
         tools:context=".ui.register.RegisterFragment">
 
@@ -30,7 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/set_up_your_account"
-            android:textSize="11sp"
+            android:textSize="14sp"
             android:textColor="@color/light_text"
             android:fontFamily="@font/poppins_regular"
             app:layout_constraintTop_toBottomOf="@id/titleTextView"
@@ -131,7 +130,7 @@
             android:padding="@dimen/space16"
             android:text="@string/sign_up"
             android:textSize="14sp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="@dimen/space24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/confirmPasswordEditText" />
@@ -144,14 +143,14 @@
             app:layout_constraintTop_toBottomOf="@id/signUpButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="@dimen/space16">
+            android:layout_marginTop="@dimen/space24">
 
             <TextView
                 android:id="@+id/already_member"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/already_a_member"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textColor="@color/text"
                 android:fontFamily="@font/poppins_regular"/>
 
@@ -161,7 +160,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/sign_in"
                 android:textColor="@color/secondary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:fontFamily="@font/poppins_regular"
                 android:layout_marginStart="@dimen/space4"/>
         </LinearLayout>
