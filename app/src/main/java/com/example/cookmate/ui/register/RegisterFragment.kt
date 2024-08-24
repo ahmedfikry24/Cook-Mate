@@ -42,7 +42,7 @@ class RegisterFragment : BaseFragment<RegisterViewModel>() {
                 is RegisterEvents.EmptyRequiredFields -> {
                     Toast.makeText(
                         requireContext(),
-                        "Please fill the required fields",
+                        event.message,
                         Toast.LENGTH_SHORT
                     ).show()
                 }
