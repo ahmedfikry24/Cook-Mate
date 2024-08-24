@@ -14,6 +14,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.navArgs
 import com.example.cookmate.R
+import com.example.cookmate.RecipeActivity
 import com.example.cookmate.ui.base.BaseFragment
 import com.example.cookmate.ui.recipe_details.view_model.RecipeDetailsViewModel
 import com.example.cookmate.ui.utils.loadImageUrl
@@ -39,6 +40,13 @@ class RecipeDetailsFragment : BaseFragment<RecipeDetailsViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getRecipeInfo(args.id)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val recipeActivity = activity as RecipeActivity
+        recipeActivity.controlNavDrawerVisibility(false)
+        recipeActivity.controlBottomNavVisibility(false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

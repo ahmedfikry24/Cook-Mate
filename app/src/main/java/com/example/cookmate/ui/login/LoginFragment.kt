@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.example.cookmate.AuthActivity
 import com.example.cookmate.R
 import com.example.cookmate.data.local.shared_pref.SharedPrefManager
 import com.example.cookmate.ui.base.BaseFragment
@@ -61,9 +62,8 @@ class LoginFragment : BaseFragment<LoginViewModel>() {
     }
 
     private fun navigateToHome() {
-        val navController = findNavController()
-        navController.setGraph(R.navigation.user_nav_graph)
-        navController.navigate(R.id.homeFragment)
+        val recipeActivity = activity as AuthActivity
+        recipeActivity.navigateToRecipeActivity()
     }
 
     private fun showToast(message: String) {

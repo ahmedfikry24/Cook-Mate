@@ -7,6 +7,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookmate.R
+import com.example.cookmate.RecipeActivity
 import com.example.cookmate.ui.base.BaseFragment
 import com.example.cookmate.ui.search.adapter.SearchAdapter
 import com.example.cookmate.ui.search.view_model.SearchEvents
@@ -24,6 +25,13 @@ class SearchFragment : BaseFragment<SearchViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val recipeActivity = activity as RecipeActivity
+        recipeActivity.controlNavDrawerVisibility(true)
+        recipeActivity.controlBottomNavVisibility(true)
     }
 
     override fun initViews(view: View) {

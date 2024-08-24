@@ -24,4 +24,8 @@ class LocalDataSourceImpl(private val localDb: RoomManager) : LocalDataSource {
     override suspend fun removeFavouriteRecipe(recipeId: String) {
         localDb.recipeDao.removeFavouriteRecipe(recipeId)
     }
+
+    override suspend fun clearFavourites() {
+        localDb.recipeDao.removeAllFavouriteRecipes()
+    }
 }

@@ -32,6 +32,10 @@ class RepositoryImpl(
         localDataSource.removeFavouriteRecipe(recipeId)
     }
 
+    override suspend fun clearFavourites() {
+        localDataSource.clearFavourites()
+    }
+
     override suspend fun recipeSearch(name: String): List<MealDto.Recipe> {
         return remoteDataSource.recipeSearch(name)
     }

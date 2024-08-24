@@ -6,6 +6,7 @@ import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookmate.R
+import com.example.cookmate.RecipeActivity
 import com.example.cookmate.ui.base.BaseFragment
 import com.example.cookmate.ui.home.adapters.HomeMainAdapter
 import com.example.cookmate.ui.home.view_model.HomeEvents
@@ -23,6 +24,14 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getDate()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getFavoriteRecipes()
+        val recipeActivity = activity as RecipeActivity
+        recipeActivity.controlNavDrawerVisibility(true)
+        recipeActivity.controlBottomNavVisibility(true)
     }
 
     override fun initViews(view: View) {
