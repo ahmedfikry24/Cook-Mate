@@ -18,13 +18,12 @@ class RecipeDetailsViewModel(
     private val _recipe = MutableLiveData<RecipeUiState>()
     val recipe: LiveData<RecipeUiState> = _recipe
 
-    private var _isFavorite: Boolean = false
-    val isFavorite = _isFavorite
+    var isFavorite = false
 
     fun getRecipeInfo(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getMealById(id)
-            _isFavorite = repository.getAllFavouriteRecipes().any { it.id == id }
+            isFavorite = repository.getAllFavouriteRecipes().any { it.id == id }
             if (result.isNotEmpty())
                 _recipe.postValue(result.map { it.toUiState(isFavorite) }.first())
         }
@@ -37,7 +36,7 @@ class RecipeDetailsViewModel(
             } else {
                 recipe.value?.toEntity()?.let { repository.addFavouriteRecipe(it) }
             }
-            _isFavorite = !isFavorite
+            isFavorite = !isFavorite
         }
     }
 }
