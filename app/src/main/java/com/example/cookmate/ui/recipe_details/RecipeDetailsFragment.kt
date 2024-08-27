@@ -1,17 +1,15 @@
 package com.example.cookmate.ui.recipe_details
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.isVisible
 import androidx.navigation.fragment.navArgs
 import com.example.cookmate.R
 import com.example.cookmate.RecipeActivity
@@ -30,8 +28,6 @@ class RecipeDetailsFragment : BaseFragment<RecipeDetailsViewModel>() {
     private lateinit var favoriteIcon: AppCompatImageView
     private lateinit var backIcon: AppCompatImageView
     private lateinit var playVideoIcon: AppCompatImageView
-    private lateinit var mainContent: LinearLayout
-    private lateinit var webView: WebView
     private val args: RecipeDetailsFragmentArgs by navArgs()
 
     override val fragmentId = R.layout.fragment_recipe_details
@@ -63,10 +59,6 @@ class RecipeDetailsFragment : BaseFragment<RecipeDetailsViewModel>() {
         favoriteIcon = view.findViewById(R.id.favorite_icon)
         backIcon = view.findViewById(R.id.back_icon)
         playVideoIcon = view.findViewById(R.id.play_video_icon)
-        mainContent = view.findViewById(R.id.main_content)
-        webView = view.findViewById(R.id.web_view)
-        webView.settings.javaScriptEnabled = true
-        webView.webViewClient = WebViewClient()
     }
 
     override fun viewModelObservers() {
@@ -113,36 +105,23 @@ class RecipeDetailsFragment : BaseFragment<RecipeDetailsViewModel>() {
 
     private fun initListeners() {
         backIcon.setOnClickListener { navController.popBackStack() }
-        playVideoIcon.setOnClickListener {
-            mainContent.isVisible = false
-            webView.isVisible = true
-            webView.loadUrl(viewModel.recipe.value?.videoUrl ?: "")
-        }
+        playVideoIcon.setOnClickListener { openVideoUrl() }
         favoriteIcon.setOnClickListener {
             if (viewModel.isFavorite) setFavoriteIconDrawable(R.drawable.ic_unfavorite)
             else setFavoriteIconDrawable(R.drawable.ic_favorite)
             viewModel.onClickFavorite()
         }
-
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    if (!mainContent.isVisible) {
-                        mainContent.isVisible = true
-                        webView.isVisible = false
-                        webView.clearHistory()
-                    } else {
-                        isEnabled = false
-                        requireActivity().onBackPressedDispatcher.onBackPressed()
-                    }
-                }
-            }
-        )
     }
 
     private fun setFavoriteIconDrawable(drawableId: Int) {
         favoriteIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), drawableId))
     }
 
+    private fun openVideoUrl() {
+        val intent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse(viewModel.recipe.value?.videoUrl ?: "http://www.google.com")
+        )
+        startActivity(intent)
+    }
 }
